@@ -9,3 +9,4 @@ class NotificationsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_notifications)
     }
 }
+
