@@ -7,21 +7,20 @@
     tools:context=".collectionsActivity">
 
     <LinearLayout
-        android:layout_width="358dp"
-        android:layout_height="638dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         tools:layout_editor_absoluteX="1dp"
         tools:layout_editor_absoluteY="1dp">
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycleview_collections"
             android:layout_width="match_parent"
-            android:layout_height="539dp" />
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:text="Button" />
+        </androidx.recyclerview.widget.RecyclerView>
 
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
