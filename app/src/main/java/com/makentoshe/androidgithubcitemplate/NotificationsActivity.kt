@@ -1,17 +1,11 @@
 package com.makentoshe.androidgithubcitemplate
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
-class MainActivity : AppCompatActivity() {
-
+class NotificationsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        val intent = Intent(this, testActivity::class.java)
-        startActivity(intent)
-
+        setContentView(R.layout.activity_notifications)
     }
 }
