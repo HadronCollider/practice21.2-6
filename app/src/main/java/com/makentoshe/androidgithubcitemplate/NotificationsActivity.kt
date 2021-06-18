@@ -36,14 +36,14 @@ class NotificationsActivity : AppCompatActivity() {
             mDialogBuilder.setView(promptsView)
 
             //Настраиваем отображение поля для ввода текста в открытом диалоге:
-            val time_input = findViewById<EditText>(R.id.noti_pro_time_input)
-            val text_input = findViewById<EditText>(R.id.noti_pro_text_input)
+            val time_input = promptsView.findViewById<EditText>(R.id.noti_pro_time_input)
+            val text_input = promptsView.findViewById<EditText>(R.id.noti_pro_text_input)
 
             mDialogBuilder
                 .setCancelable(false)
                 .setPositiveButton("Сохранить") { dialog, id ->
                     if (text_input != null) {
-                        add_button.setText(text_input.text)
+                        add_button.setText(text_input.text.toString())
                     }
                 }                                                                                     //TODO: Save text
                 .setNegativeButton("Отмена") { dialog, id -> dialog.cancel()}
