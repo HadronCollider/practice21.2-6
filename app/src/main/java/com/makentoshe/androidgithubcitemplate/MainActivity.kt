@@ -3,8 +3,12 @@ package com.makentoshe.androidgithubcitemplate
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
+import android.view.*
+import android.widget.Button
+import android.widget.TextView
+import androidx.appcompat.widget.SwitchCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
 
@@ -12,6 +16,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val school_sub  = findViewById<RecyclerView>(R.id.school_subjects)
+        school_sub.layoutManager = LinearLayoutManager(this)
+        school_sub.adapter = SchoolSubRecyclerAdapter(10)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -32,5 +39,26 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+}
+
+class SchoolSubRecyclerAdapter(val strings: Int): RecyclerView.Adapter<SchoolSubViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SchoolSubViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_main, parent, false)
+        return SchoolSubViewHolder(itemView)
+    }
+
+    override fun onBindViewHolder(holder: SchoolSubViewHolder, position: Int) {
+       // holder.name?.setText(holder.name.toString())
+    }
+
+    override fun getItemCount() = strings
+}
+
+class SchoolSubViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    var name: TextView? = null
+
+    init {
+        name = itemView.findViewById(R.id.school_sub_name)
     }
 }
