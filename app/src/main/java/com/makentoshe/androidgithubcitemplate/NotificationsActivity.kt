@@ -13,6 +13,7 @@ import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +23,7 @@ class NotificationsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notifications)
+        title = "Уведомления"
 
         val notis = findViewById<RecyclerView>(R.id.notis)
         notis.layoutManager = LinearLayoutManager(this)
@@ -76,7 +78,7 @@ class CustomRecyclerAdapter(val strings: Int): RecyclerView.Adapter<MyViewHolder
 class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var time: TextView? = null
     var text: TextView? = null
-    var switch: Switch? = null
+    var switch: SwitchCompat? = null
     var del_but: Button? = null
 
     var hour: Int = 6
