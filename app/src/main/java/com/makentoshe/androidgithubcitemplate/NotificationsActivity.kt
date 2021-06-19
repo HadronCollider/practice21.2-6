@@ -1,8 +1,5 @@
 package com.makentoshe.androidgithubcitemplate
 
-import android.app.Dialog
-import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,8 +10,6 @@ import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SwitchCompat
-import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -27,7 +22,7 @@ class NotificationsActivity : AppCompatActivity() {
 
         val notis = findViewById<RecyclerView>(R.id.notis)
         notis.layoutManager = LinearLayoutManager(this)
-        notis.adapter = CustomRecyclerAdapter(10)
+        notis.adapter = NotiRecyclerAdapter(10)
 
         val add_button = findViewById<Button>(R.id.noti_add_button)
         add_button.setOnClickListener {
@@ -62,23 +57,23 @@ class NotificationsActivity : AppCompatActivity() {
     }
 }
 
-class CustomRecyclerAdapter(val strings: Int): RecyclerView.Adapter<MyViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+class NotiRecyclerAdapter(val strings: Int): RecyclerView.Adapter<NotiViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotiViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_notifications, parent, false)
-        return MyViewHolder(itemView)
+        return NotiViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: NotiViewHolder, position: Int) {
         holder.time?.setText("${holder.hour + position}:00")
     }
 
     override fun getItemCount() = strings
 }
 
-class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class NotiViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var time: TextView? = null
     var text: TextView? = null
-    var switch: SwitchCompat? = null
+    var switch: Switch? = null
     var del_but: Button? = null
 
     var hour: Int = 6
