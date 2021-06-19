@@ -1,5 +1,7 @@
 package com.makentoshe.androidgithubcitemplate
 
+import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +13,7 @@ import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -26,34 +29,34 @@ class NotificationsActivity : AppCompatActivity() {
 
         val add_button = findViewById<Button>(R.id.noti_add_button)
         add_button.setOnClickListener {
-            val li: LayoutInflater = LayoutInflater.from(this)
-            val promptsView: View = li.inflate(R.layout.prompt_noti, null)
-
-            //Создаем AlertDialog
-            val mDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
-
-            //Настраиваем prompt.xml для нашего AlertDialog:
-            mDialogBuilder.setView(promptsView)
-
-            //Настраиваем отображение поля для ввода текста в открытом диалоге:
-            val time_input = promptsView.findViewById<EditText>(R.id.noti_pro_time_input)
-            val text_input = promptsView.findViewById<EditText>(R.id.noti_pro_text_input)
-
-            mDialogBuilder
-                .setCancelable(false)
-                .setPositiveButton("Сохранить") { dialog, id ->
-                    if (text_input != null) {
-                        add_button.setText(text_input.text.toString())
-                    }
-                }                                                                                     //TODO: Save text
-                .setNegativeButton("Отмена") { dialog, id -> dialog.cancel()}
-
-            //Настраиваем сообщение в диалоговом окне:*/
-            val alertDialog: AlertDialog = mDialogBuilder.create()
-            alertDialog.show()
-
-
+            makeDialogWindow()
         }
+    }
+
+    fun makeDialogWindow () {
+        val li: LayoutInflater = LayoutInflater.from(this)
+        val promptsView: View = li.inflate(R.layout.prompt_noti, null)
+
+        //Создаем AlertDialog
+        val mDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
+
+        //Настраиваем prompt.xml для нашего AlertDialog:
+        mDialogBuilder.setView(promptsView)
+
+        //Настраиваем отображение поля для ввода текста в открытом диалоге:
+        val time_input = promptsView.findViewById<EditText>(R.id.noti_pro_time_input)
+        val text_input = promptsView.findViewById<EditText>(R.id.noti_pro_text_input)
+
+        mDialogBuilder
+            .setCancelable(false)
+            .setPositiveButton("Сохранить") { dialog, id ->
+                if (text_input != null) {
+                    //add_button.setText(text_input.text.toString())                             //TODO
+                }
+            }
+            .setNegativeButton("Отмена") { dialog, id -> dialog.cancel()}
+        val alertDialog: AlertDialog = mDialogBuilder.create()
+        alertDialog.show()
     }
 }
 
