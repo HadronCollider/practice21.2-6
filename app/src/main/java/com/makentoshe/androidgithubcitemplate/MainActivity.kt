@@ -5,8 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
-import androidx.appcompat.widget.SwitchCompat
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -19,6 +20,11 @@ class MainActivity : AppCompatActivity() {
         val school_sub  = findViewById<RecyclerView>(R.id.school_subjects)
         school_sub.layoutManager = LinearLayoutManager(this)
         school_sub.adapter = SchoolSubRecyclerAdapter(10)
+
+        val add_button = findViewById<Button>(R.id.main_add_button)
+        add_button.setOnClickListener {
+            makeDialogWindow()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -39,6 +45,31 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun makeDialogWindow () {
+        val li: LayoutInflater = LayoutInflater.from(this)
+        val promptsView: View = li.inflate(R.layout.prompt_main, null)
+
+        //Создаем AlertDialog
+        val mDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
+
+        //Настраиваем prompt.xml для нашего AlertDialog:
+        mDialogBuilder.setView(promptsView)
+
+        //Настраиваем отображение поля для ввода текста в открытом диалоге:
+        val text_input = promptsView.findViewById<EditText>(R.id.main_pro_text_input)
+
+        mDialogBuilder
+            .setCancelable(false)
+            .setPositiveButton("Сохранить") { dialog, id ->
+                if (text_input != null) {
+                    //add_button.setText(text_input.text.toString())                             //TODO
+                }
+            }
+            .setNegativeButton("Отмена") { dialog, id -> dialog.cancel()}
+        val alertDialog: AlertDialog = mDialogBuilder.create()
+        alertDialog.show()
     }
 }
 
