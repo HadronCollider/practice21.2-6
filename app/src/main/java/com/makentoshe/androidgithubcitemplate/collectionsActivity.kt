@@ -111,7 +111,7 @@ class RecyclerViewAdapterCollections(val activity : CollectionsActivity, val col
         val view : View = layoutInflater.inflate(R.layout.collection_settings, null)
         val deleteButton = view.findViewById<Button>(R.id.buttonDelete)
         val colorButton = view.findViewById<Button>(R.id.buttonColor)
-        //colorButton.setBackgroundColor(collections[position].color)
+        colorButton.setBackgroundColor(collections[position].color)
 
         // Settings builder
         builderSettings.setView(view)
