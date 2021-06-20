@@ -1,13 +1,13 @@
 package com.makentoshe.androidgithubcitemplate
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
 
         val school_sub  = findViewById<RecyclerView>(R.id.school_subjects)
         school_sub.layoutManager = LinearLayoutManager(this)
-        school_sub.adapter = SchoolSubRecyclerAdapter(10)
+        school_sub.adapter = SchoolSubRecyclerAdapter(10, this)
 
         val add_button = findViewById<Button>(R.id.main_add_button)
         add_button.setOnClickListener {
@@ -73,14 +73,25 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-class SchoolSubRecyclerAdapter(val strings: Int): RecyclerView.Adapter<SchoolSubViewHolder>() {
+class SchoolSubRecyclerAdapter(val strings: Int, val ct: Context): RecyclerView.Adapter<SchoolSubViewHolder>() {
+    var ctx: Context? = null
+
+    init{
+        ctx = ct
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SchoolSubViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_main, parent, false)
         return SchoolSubViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: SchoolSubViewHolder, position: Int) {
-       // holder.name?.setText(holder.name.toString())
+        // holder.name?.setText(holder.name.toString())
+
+//        val menu: PopupMenu = PopupMenu(ctx, holder.menu_but)
+//        menu.inflate(R.menu.menu_school_sub)
+//        menu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener {
+//        })
     }
 
     override fun getItemCount() = strings
@@ -88,8 +99,10 @@ class SchoolSubRecyclerAdapter(val strings: Int): RecyclerView.Adapter<SchoolSub
 
 class SchoolSubViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var name: TextView? = null
+    var menu_but: TextView? = null
 
     init {
         name = itemView.findViewById(R.id.school_sub_name)
+        menu_but = itemView.findViewById((R.id.school_sub_options))
     }
 }
