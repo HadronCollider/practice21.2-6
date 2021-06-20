@@ -12,7 +12,7 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater as LayoutInflater
 
-class Collection(val activity : CollectionsActivity, var text : String, var isSelected : Boolean)
+class Collection(var text : String, var isSelected : Boolean)
 {
 }
 
@@ -21,12 +21,40 @@ class CollectionsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_collections)
 
-        val collections = mutableListOf(Collection(this, "Hello", false),
-            Collection(this, "Hello2", false),
-            Collection(this, "Hello3", false))
+        val collections = mutableListOf(Collection("Hello", false),
+            Collection( "Hello3", false),
+            Collection( "Hello2", false))
 
         val recycleView = findViewById<RecyclerView>(R.id.recycleview_collections)
         recycleView.adapter = RecyclerViewAdapterCollections(this, collections)
+
+        val builderSettings : AlertDialog.Builder = AlertDialog.Builder(this)
+        // Settings builder
+        val layoutInflater : LayoutInflater = LayoutInflater.from(this)
+        val view : View = layoutInflater.inflate(R.layout.collection_settings, null)
+        builderSettings.setView(view)
+        builderSettings.setCancelable(true);
+        builderSettings.setPositiveButton("Add",
+            DialogInterface.OnClickListener { dialog, id ->
+                val alertDialog : AlertDialog = dialog as AlertDialog
+                val newText = alertDialog.findViewById<EditText>(R.id.editTextCollectionName)
+                collections.add(Collection(newText?.text.toString(), false ))
+                recycleView.adapter?.notifyDataSetChanged()
+                dialog.dismiss()
+            })
+        builderSettings.setNegativeButton("Cancel",
+            DialogInterface.OnClickListener { dialog, id -> dialog.dismiss()
+            })
+
+        val dialogSettings : AlertDialog = builderSettings.create()
+
+        val addingButton = findViewById<Button>(R.id.buttonAdd)
+        addingButton.setOnClickListener {
+            dialogSettings.show()
+
+            val editText = dialogSettings.findViewById<EditText>(R.id.editTextCollectionName)
+            editText?.setText("Enter name")
+        }
     }
 
     fun updateData()
@@ -39,8 +67,8 @@ class CollectionsActivity : AppCompatActivity() {
 
 class RecyclerViewAdapterCollections(val activity : CollectionsActivity, val collections : MutableList<Collection>): RecyclerView.Adapter<ViewHolderCollections> ()
 {
-    val builderSettings : AlertDialog.Builder = AlertDialog.Builder(activity)
-    val builderDeleteConfirm : AlertDialog.Builder = AlertDialog.Builder(activity)
+    private val builderSettings : AlertDialog.Builder = AlertDialog.Builder(activity)
+    private val builderDeleteConfirm : AlertDialog.Builder = AlertDialog.Builder(activity)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderCollections {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.collection_item, parent, false)
@@ -51,6 +79,7 @@ class RecyclerViewAdapterCollections(val activity : CollectionsActivity, val col
         holder.textView.text = collections[position].text
         holder.cardView.setCardBackgroundColor(Color.parseColor("#00FF00"))
 
+        holder.textView.setTextColor(Color.parseColor("#FFFFFF"))
         //holder.imageButton.setOnClickListener{collections[position].onClick()}
         //holder.imageButton.setOnClick
 
@@ -67,8 +96,18 @@ class RecyclerViewAdapterCollections(val activity : CollectionsActivity, val col
                 val newText = alertDialog.findViewById<EditText>(R.id.editTextCollectionName)
                 collections[position].text = newText?.text.toString()
                 notifyItemChanged(position)
+                dialog.dismiss()
             })
+        builderSettings.setNegativeButton("Cancel",
+            DialogInterface.OnClickListener { dialog, id -> dialog.dismiss()})
+
         val dialogSettings : AlertDialog = builderSettings.create()
+        holder.imageButton.setOnClickListener{
+            dialogSettings.show()
+
+            val editText = dialogSettings.findViewById<EditText>(R.id.editTextCollectionName)
+            editText?.setText(collections[position].text)
+        }
 
         // Delete confirm builder
         builderDeleteConfirm.setMessage("Delete collection?");
@@ -85,11 +124,13 @@ class RecyclerViewAdapterCollections(val activity : CollectionsActivity, val col
             DialogInterface.OnClickListener { dialog, id -> dialog.dismiss()})
         val dialogDeleteConfirm : AlertDialog = builderDeleteConfirm.create()
 
-        holder.imageButton.setOnClickListener{dialogSettings.show()}
-
         val DeleteButton = view.findViewById<Button>(R.id.buttonDelete)
         DeleteButton.setOnClickListener{dialogDeleteConfirm.show()}
 
+        // Checkbox
+        holder.checkBox.setOnCheckedChangeListener{ buttonView, isChecked ->
+            collections[position].isSelected = isChecked
+        }
     }
 
     override fun getItemCount(): Int {
