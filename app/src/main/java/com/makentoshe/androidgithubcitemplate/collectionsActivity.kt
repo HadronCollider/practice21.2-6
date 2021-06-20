@@ -25,9 +25,7 @@ class CollectionsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_collections)
 
-        val collections = mutableListOf(Collection("Hello", false),
-            Collection( "Hello3", false),
-            Collection( "Hello2", false))
+        val collections = (0 until 100).map { Collection("Hello${it}", false) } as MutableList
 
         val recycleView = findViewById<RecyclerView>(R.id.recycleview_collections)
         recycleView.adapter = RecyclerViewAdapterCollections(this, collections)
@@ -79,12 +77,6 @@ class CollectionsActivity : AppCompatActivity() {
             editText?.setText("Enter name")
         }
     }
-
-    fun updateData()
-    {
-
-    }
-
 }
 
 
@@ -137,8 +129,8 @@ class RecyclerViewAdapterCollections(val activity : CollectionsActivity, val col
         }
 
         // Delete confirm builder
-        builderDeleteConfirm.setMessage("Delete collection?");
-        builderDeleteConfirm.setCancelable(true);
+        builderDeleteConfirm.setMessage("Delete collection?")
+        builderDeleteConfirm.setCancelable(true)
         builderDeleteConfirm.setPositiveButton("Yes",
             DialogInterface.OnClickListener { dialog, id ->
                 collections.removeAt(position)
