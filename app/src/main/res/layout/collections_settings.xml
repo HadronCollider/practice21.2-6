@@ -9,7 +9,7 @@
 
 
     <EditText
-        android:id="@+id/editTextCollectionName"
+        android:id="@+id/editTextCollectionsSettings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -17,10 +17,15 @@
         android:text="Name" />
 
     <Button
-        android:id="@+id/buttonColor"
+        android:id="@+id/buttonCollectionsSettingsColor"
         android:layout_width="match_parent"
         android:layout_height="47dp"
         android:text="Color" />
 
+    <Button
+        android:id="@+id/buttonCollectionsSettingsDelete"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:text="Delete" />
 
 </LinearLayout>

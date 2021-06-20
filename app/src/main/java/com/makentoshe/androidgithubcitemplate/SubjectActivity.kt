@@ -3,6 +3,7 @@ package com.makentoshe.androidgithubcitemplate
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageButton
@@ -15,17 +16,24 @@ class SubjectActivity : AppCompatActivity() {
         val imageButtonCollections = findViewById<ImageButton>(R.id.imageButtonCollections)
         val imageButtonConspects = findViewById<ImageButton>(R.id.imageButtonConspects)
 
-        val buttonAnimation = AnimationUtils.loadAnimation(this, R.anim.click)
+        val buttonAnimation1 = AnimationUtils.loadAnimation(this, R.anim.click)
+        val buttonAnimation2 = AnimationUtils.loadAnimation(this, R.anim.click)
+
+        val setDelay : Handler = Handler()
 
         imageButtonCollections.setOnClickListener {
             val intent = Intent(this, CollectionsActivity::class.java)
-            startActivity(intent)
-            imageButtonCollections.startAnimation(buttonAnimation)
+            imageButtonCollections.startAnimation(buttonAnimation1)
+            val startDelay : Runnable  = Runnable { startActivity(intent) }
+            setDelay.postDelayed(startDelay, 200)
         }
         imageButtonConspects.setOnClickListener {
-            val intent = Intent(this, CollectionsActivity::class.java)
-            startActivity(intent)
-            imageButtonConspects.startAnimation(buttonAnimation)
+            val intent = Intent(this, ConspectActivity::class.java)
+            imageButtonConspects.startAnimation(buttonAnimation2)
+
+            val startDelay : Runnable  = Runnable { startActivity(intent) }
+            setDelay.postDelayed(startDelay, 200)
+
         }
 
     }
