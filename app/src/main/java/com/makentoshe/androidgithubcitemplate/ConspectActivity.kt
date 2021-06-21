@@ -24,6 +24,7 @@ class ConspectActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_conspect)
+        title = "Конспекты"
 
         val conspects = (0 until 100).map { Conspect("Conspect #${it}", false) } as MutableList
 
