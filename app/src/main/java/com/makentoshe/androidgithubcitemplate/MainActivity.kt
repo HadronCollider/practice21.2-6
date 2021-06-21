@@ -73,12 +73,7 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-class SchoolSubRecyclerAdapter(val strings: Int, val ct: Context): RecyclerView.Adapter<SchoolSubViewHolder>() {
-    var ctx: Context? = null
-
-    init{
-        ctx = ct
-    }
+class SchoolSubRecyclerAdapter(val strings: Int, val ctx: MainActivity): RecyclerView.Adapter<SchoolSubViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SchoolSubViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_main, parent, false)
@@ -86,15 +81,42 @@ class SchoolSubRecyclerAdapter(val strings: Int, val ct: Context): RecyclerView.
     }
 
     override fun onBindViewHolder(holder: SchoolSubViewHolder, position: Int) {
-        // holder.name?.setText(holder.name.toString())
+        holder.menu_but?.setOnClickListener {
+            makeDialogWindow()
+        }
 
-//        val menu: PopupMenu = PopupMenu(ctx, holder.menu_but)
-//        menu.inflate(R.menu.menu_school_sub)
-//        menu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener {
-//        })
+        holder.name?.setOnClickListener {
+            val intent = Intent(ctx, SubjectActivity::class.java)
+            ctx.startActivity(intent)
+        }
     }
 
     override fun getItemCount() = strings
+
+    private fun makeDialogWindow () {
+        val li: LayoutInflater = LayoutInflater.from(ctx)
+        val promptsView: View = li.inflate(R.layout.prompt_main, null)
+
+        //Создаем AlertDialog
+        val mDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(ctx)
+
+        //Настраиваем prompt.xml для нашего AlertDialog:
+        mDialogBuilder.setView(promptsView)
+
+        //Настраиваем отображение поля для ввода текста в открытом диалоге:
+        val text_input = promptsView.findViewById<EditText>(R.id.main_pro_text_input)
+
+        mDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("Сохранить") { dialog, id ->
+                    if (text_input != null) {
+                        //add_button.setText(text_input.text.toString())                             //TODO
+                    }
+                }
+                .setNegativeButton("Отмена") { dialog, id -> dialog.cancel()}
+        val alertDialog: AlertDialog = mDialogBuilder.create()
+        alertDialog.show()
+    }
 }
 
 class SchoolSubViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
