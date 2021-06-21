@@ -1,6 +1,7 @@
 package com.makentoshe.androidgithubcitemplate
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
@@ -77,6 +78,12 @@ class CollectionsActivity : AppCompatActivity() {
             val editText = dialogSettings.findViewById<EditText>(R.id.editTextCollectionsAdding)
             editText?.setText("Enter name")
         }
+
+        // Test start
+        val testStartButton = findViewById<Button>(R.id.buttonTestStart)
+        testStartButton.setOnClickListener {
+            val intent = Intent(this, TestActivity::class.java)
+            startActivity(intent)        }
     }
 }
 

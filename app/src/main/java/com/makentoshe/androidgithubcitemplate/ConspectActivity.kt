@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.flask.colorpicker.builder.ColorPickerClickListener
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 
-class Conspect(var text : String, var isSelected : Boolean)
+class Conspect(var text : String)
 {
     var color = Color.parseColor("#FFFFFF")
 }
@@ -26,7 +26,7 @@ class ConspectActivity : AppCompatActivity() {
         setContentView(R.layout.activity_conspect)
         title = "Конспекты"
 
-        val conspects = (0 until 100).map { Conspect("Conspect #${it}", false) } as MutableList
+        val conspects = (0 until 100).map { Conspect("Conspect #${it}") } as MutableList
 
         val recycleView = findViewById<RecyclerView>(R.id.recycleviewConspects)
         recycleView.adapter = RecyclerViewAdapterConspects(this, conspects)
@@ -43,7 +43,7 @@ class ConspectActivity : AppCompatActivity() {
         builderSettings.setPositiveButton("Add",
             DialogInterface.OnClickListener { dialog, id ->
                 val newText = view.findViewById<EditText>(R.id.editTextConspectsAdding)
-                val conspect = Conspect(newText?.text.toString(), false )
+                val conspect = Conspect(newText?.text.toString() )
                 conspects.add(conspect)
                 val background = colorButton.background as ColorDrawable
                 conspect.color = background.color

@@ -25,14 +25,22 @@ class SubjectActivity : AppCompatActivity() {
         imageButtonCollections.setOnClickListener {
             val intent = Intent(this, CollectionsActivity::class.java)
             imageButtonCollections.startAnimation(buttonAnimation1)
-            val startDelay : Runnable  = Runnable { startActivity(intent) }
+            imageButtonConspects.isClickable = false
+            val startDelay : Runnable  = Runnable {
+                startActivity(intent)
+                imageButtonConspects.isClickable = true
+            }
             setDelay.postDelayed(startDelay, 200)
         }
         imageButtonConspects.setOnClickListener {
             val intent = Intent(this, ConspectActivity::class.java)
             imageButtonConspects.startAnimation(buttonAnimation2)
+            imageButtonCollections.isClickable = false
 
-            val startDelay : Runnable  = Runnable { startActivity(intent) }
+            val startDelay : Runnable  = Runnable {
+                imageButtonCollections.isClickable = true
+                startActivity(intent)
+            }
             setDelay.postDelayed(startDelay, 200)
 
         }
