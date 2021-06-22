@@ -12,7 +12,7 @@ class SubjectActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_subject)
-        title = "Предмет"
+        title = "Subject"
 
         val imageButtonCollections = findViewById<ImageButton>(R.id.imageButtonCollections)
         val imageButtonConspects = findViewById<ImageButton>(R.id.imageButtonConspects)

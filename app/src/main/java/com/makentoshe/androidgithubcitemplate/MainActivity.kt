@@ -15,11 +15,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val school_sub = findViewById<RecyclerView>(R.id.recycleviewMenu)
+        val school_sub = findViewById<RecyclerView>(R.id.school_subjects)
         school_sub.layoutManager = LinearLayoutManager(this)
         school_sub.adapter = SchoolSubRecyclerAdapter(1, this)
 
-        val add_button = findViewById<Button>(R.id.buttonMenu)
+        val add_button = findViewById<Button>(R.id.main_add_button)
         add_button.setOnClickListener {
             makeDialogWindow()
         }
@@ -123,6 +123,6 @@ class SchoolSubViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     init {
         name = itemView.findViewById(R.id.textViewMenuItem)
-        menu_but = itemView.findViewById(R.id.buttonMenu)
+        menu_but = itemView.findViewById(R.id.main_add_button)
     }
 }

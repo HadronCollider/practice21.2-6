@@ -24,9 +24,9 @@ class ConspectActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_conspect)
-        title = "Конспекты"
+        title = "Conspects"
 
-        val conspects = (0 until 100).map { Conspect("Conspect #${it}") } as MutableList
+        val conspects = (0 until 10).map { Conspect("Conspect #${it}") } as MutableList
 
         val recycleView = findViewById<RecyclerView>(R.id.recycleviewConspects)
         recycleView.adapter = RecyclerViewAdapterConspects(this, conspects)
