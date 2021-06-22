@@ -37,20 +37,16 @@ class NotificationsActivity : AppCompatActivity() {
             mDialogBuilder.setView(promptsView)
             val time_input = promptsView.findViewById<EditText>(R.id.noti_pro_time_input)
             val text_input = promptsView.findViewById<EditText>(R.id.noti_pro_text_input)
-            val colorButton = promptsView.findViewById<Button>(R.id.noti_button_adding_color)
-            colorButton.setBackgroundColor(Color.parseColor("#FFFFFF"))
             mDialogBuilder
                     .setCancelable(false)
                     .setPositiveButton("Сохранить") { dialog, id ->
                         if (time_input?.text?.length == 4) {
                             val not = Noti(text_input?.text.toString(), time_input?.text.toString(), false)
                             notis.add(not)
-                            val background = colorButton.background as ColorDrawable
-                            not.color = background.color
                             notis_recycler.adapter?.notifyDataSetChanged()
                             dialog.cancel()
                         } else {
-                            Toast.makeText(this, "Set correct time", Toast.LENGTH_SHORT)
+                            Toast.makeText(this, "Incorrect time format", Toast.LENGTH_SHORT).show()
                             dialog.cancel()
                         }
                     }
@@ -86,6 +82,9 @@ class NotiRecyclerAdapter(val notis: MutableList<Noti>, val ctx: NotificationsAc
             val alertDialog: AlertDialog = mDialogBuilder.create()
             alertDialog.show()
         }
+        holder.switch?.setOnCheckedChangeListener { compoundButton, b ->
+            notis[position].isSelected = b
+        }
     }
 
     override fun getItemCount() = notis.size
@@ -96,8 +95,6 @@ class NotiViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var text: TextView? = null
     var switch: Switch? = null
     var del_but: Button? = null
-
-    var hour: Int = 6
 
     init {
         time = itemView.findViewById(R.id.noti_time)

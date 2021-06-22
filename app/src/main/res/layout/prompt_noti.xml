@@ -34,10 +34,4 @@
         android:layout_height="wrap_content"
         android:text="">
     </EditText>
-
-    <Button
-        android:id="@+id/noti_button_adding_color"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Color" />
 </LinearLayout>
