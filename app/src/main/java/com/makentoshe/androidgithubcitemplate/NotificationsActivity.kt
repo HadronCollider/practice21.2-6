@@ -69,7 +69,7 @@ class NotiRecyclerAdapter(val notis: MutableList<Noti>, val ctx: NotificationsAc
 
     override fun onBindViewHolder(holder: NotiViewHolder, position: Int) {
         holder.text?.text = notis[position].text
-        holder.time?.text = "${notis[position].text[0]}${notis[position].text[1]}:${notis[position].text[2]}${notis[position].text[3]}"
+        holder.time?.text = "${notis[position].time[0]}${notis[position].time[1]}:${notis[position].time[2]}${notis[position].time[3]}"
 
         holder.del_but?.setOnClickListener {
             val mDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(ctx)
