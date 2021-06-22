@@ -1,13 +1,11 @@
 package com.makentoshe.androidgithubcitemplate
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -19,7 +17,7 @@ class MainActivity : AppCompatActivity() {
 
         val school_sub = findViewById<RecyclerView>(R.id.recycleviewMenu)
         school_sub.layoutManager = LinearLayoutManager(this)
-        school_sub.adapter = SchoolSubRecyclerAdapter(10, this)
+        school_sub.adapter = SchoolSubRecyclerAdapter(1, this)
 
         val add_button = findViewById<Button>(R.id.buttonMenu)
         add_button.setOnClickListener {
@@ -64,7 +62,7 @@ class MainActivity : AppCompatActivity() {
             .setCancelable(false)
             .setPositiveButton("Сохранить") { dialog, id ->
                 if (text_input != null) {
-                    //add_button.setText(text_input.text.toString())                             //TODO
+                    //add_button.setText(text_input.text.toString())                                 //TODO
                 }
             }
             .setNegativeButton("Отмена") { dialog, id -> dialog.cancel()}

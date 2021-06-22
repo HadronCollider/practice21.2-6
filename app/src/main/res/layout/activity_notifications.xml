@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="90dp"
         android:layout_margin="5dp"
-        android:text="Добавить напоминалку"
+        android:text="Add notification"
         android:background="#0099CC"
         android:textColor="#FFFFFF"
         app:layout_constraintTop_toBottomOf="@+id/notis"
