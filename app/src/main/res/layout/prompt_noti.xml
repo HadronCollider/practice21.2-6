@@ -8,9 +8,10 @@
     android:padding="10dp" >
 
     <TimePicker
-        android:id="@+id/timePicker"
+        android:id="@+id/noti_time_input"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:timePickerMode="spinner"/>
 
     <TextView
         android:id="@+id/noti_pro_text_text"

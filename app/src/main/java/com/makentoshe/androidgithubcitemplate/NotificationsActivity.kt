@@ -37,20 +37,23 @@ class NotificationsActivity : AppCompatActivity() {
             val promptsView: View = li.inflate(R.layout.prompt_noti, null)
             val mDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
             mDialogBuilder.setView(promptsView)
-            val time_input = promptsView.findViewById<TimePicker>(R.id.timePicker)
+            val time_input = promptsView.findViewById<TimePicker>(R.id.noti_time_input)
             val text_input = promptsView.findViewById<EditText>(R.id.noti_pro_text_input)
-
             time_input.setIs24HourView(true)
             time_input.setCurrentHour(12)
             time_input.setCurrentMinute(0)
             mDialogBuilder
                     .setCancelable(false)
                     .setPositiveButton("Сохранить") { dialog, id ->
-                        var time = "1200"
-                        time_input.setOnTimeChangedListener(OnTimeChangedListener { view, hourOfDay, minute ->
-                            time = "$hourOfDay$minute"
-                        })
-                        val not = Noti(text_input?.text.toString(), time, false)
+                        var h = time_input.hour.toString()                                       //РАБОТАЕТ НЕ ТРОГАЙ
+                        var m = time_input.minute.toString()
+                        if (h.length == 1){
+                            h = "0" + h
+                        }
+                        if (m.length == 1){
+                            m = "0" + m
+                        }
+                        val not = Noti(text_input?.text.toString(), h + m, false)
                         notis.add(not)
                         notis_recycler.adapter?.notifyDataSetChanged()
                         dialog.cancel()
@@ -91,7 +94,40 @@ class NotiRecyclerAdapter(val notis: MutableList<Noti>, val ctx: NotificationsAc
         holder.switch?.setOnCheckedChangeListener { compoundButton, b ->
             notis[position].isSelected = b
         }
+        holder.lay?.setOnClickListener{
+            val li: LayoutInflater = LayoutInflater.from(ctx)
+            val promptsView: View = li.inflate(R.layout.prompt_noti, null)
+            val mDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(ctx)
+            mDialogBuilder.setView(promptsView)
+            val time_input = promptsView.findViewById<TimePicker>(R.id.noti_time_input)
+            val text_input = promptsView.findViewById<EditText>(R.id.noti_pro_text_input)
 
+            text_input.setText(notis[position].text)
+
+            time_input.setIs24HourView(true)
+            time_input.setCurrentHour("${notis[position].time[0]}${notis[position].time[1]}".toInt())
+            time_input.setCurrentMinute("${notis[position].time[2]}${notis[position].time[3]}".toInt())
+            mDialogBuilder
+                    .setCancelable(false)
+                    .setPositiveButton("Сохранить") { dialog, id ->
+                        var h = time_input.hour.toString()                                       //РАБОТАЕТ НЕ ТРОГАЙ
+                        var m = time_input.minute.toString()
+                        if (h.length == 1){
+                            h = "0" + h
+                        }
+                        if (m.length == 1){
+                            m = "0" + m
+                        }
+                        notis[position].text = text_input.text.toString()
+                        notis[position].time = h + m
+                        notifyItemChanged(position)
+                        dialog.cancel()
+
+                    }
+                    .setNegativeButton("Отмена") { dialog, id -> dialog.cancel()}
+            val alertDialog: AlertDialog = mDialogBuilder.create()
+            alertDialog.show()
+        }
     }
 
     override fun getItemCount() = notis.size
@@ -109,5 +145,6 @@ class NotiViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         text = itemView.findViewById(R.id.noti_text)
         switch = itemView.findViewById(R.id.noti_switch)
         del_but = itemView.findViewById(R.id.noti_del_button)
+        lay = itemView.findViewById(R.id.noti_layout)
     }
 }
