@@ -7,11 +7,11 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
-interface TestCardDao {
+interface CollectionItemDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addTestCard(testCard : TestCard)
+    suspend fun addCollectionItem(testCard : CollectionItem)
 
-    @Query("SELECT * FROM testcard_table ORDER BY id ASC")
-    fun readAllData(): LiveData<List<TestCard>>
+    @Query("SELECT * FROM collectionitem_table ORDER BY id ASC")
+    fun readAllData(): LiveData<List<CollectionItem>>
 }

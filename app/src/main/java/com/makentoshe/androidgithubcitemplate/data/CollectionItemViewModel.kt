@@ -7,19 +7,19 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class TestCardViewModel(application: Application): AndroidViewModel(application) {
-    private val readAllData : LiveData<List<TestCard>>
-    private val repository: TestCardRepository
+class CollectionItemViewModel(application: Application): AndroidViewModel(application) {
+    val readAllData : LiveData<List<CollectionItem>>
+    private val repository: CollectionItemRepository
 
     init {
-        val testCardDao = TestCardDatabase.getDatabase(application).testCardDao()
-        repository = TestCardRepository(testCardDao)
+        val testCardDao = CollectionItemDatabase.getDatabase(application).collectionItemDao()
+        repository = CollectionItemRepository(testCardDao)
         readAllData = repository.readAllData
     }
 
-    fun addTestCard(testCard : TestCard) {
+    fun addTestCard(testCard : CollectionItem) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.addTestCard(testCard)
+            repository.addCollectionItem(testCard)
         }
     }
 

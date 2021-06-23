@@ -11,21 +11,17 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.flask.colorpicker.builder.ColorPickerClickListener
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
-import com.makentoshe.androidgithubcitemplate.data.TestCard
-import com.makentoshe.androidgithubcitemplate.data.TestCardViewModel
+import com.makentoshe.androidgithubcitemplate.data.CollectionItem
+import com.makentoshe.androidgithubcitemplate.data.CollectionItemViewModel
 import android.view.LayoutInflater as LayoutInflater
 
-class Collection(var text : String, var isSelected : Boolean)
-{
-    var color = Color.parseColor("#FFFFFF")
-}
-
 class CollectionsActivity : AppCompatActivity() {
-    private lateinit var mTestCardViewModel: TestCardViewModel
+    private lateinit var mCollectionItemViewModel: CollectionItemViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,11 +31,18 @@ class CollectionsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_collections)
         title = "Наборы"
 
-        // Database
-        val collections = (0 until 100).map { Collection("Collection #${it}", false) } as MutableList
+        //val collections = (0 until 100).map { Collection("Collection #${it}", false) } as MutableList
 
+        // Recycler view
         val recycleView = findViewById<RecyclerView>(R.id.recycleviewCollections)
-        recycleView.adapter = RecyclerViewAdapterCollections(this, collections)
+        val adapter = RecyclerViewAdapterCollections(this)
+        recycleView.adapter = adapter
+
+        // Database
+        mCollectionItemViewModel = ViewModelProvider(this).get(CollectionItemViewModel::class.java)
+        mCollectionItemViewModel.readAllData.observe(this, Observer {
+                collections -> adapter.setData(collections)
+        })
 
         val builderSettings : AlertDialog.Builder = AlertDialog.Builder(this)
         // Settings builder
@@ -53,13 +56,10 @@ class CollectionsActivity : AppCompatActivity() {
         builderSettings.setPositiveButton("Add",
             DialogInterface.OnClickListener { dialog, id ->
                 val newText = view.findViewById<EditText>(R.id.editTextCollectionsAdding)
-                val collection = Collection(newText?.text.toString(), false )
-                collections.add(collection)
                 val background = colorButton.background as ColorDrawable
-                collection.color = background.color
                 recycleView.adapter?.notifyDataSetChanged()
                 dialog.dismiss()
-                if (insertDataToDataBase(collection.color, collection.text)) {
+                if (insertDataToDataBase(background.color, newText?.text.toString())) {
                     Toast.makeText(this, "Added!", Toast.LENGTH_LONG).show()
                 } else {
                     Toast.makeText(this, "Input is not correct!", Toast.LENGTH_LONG).show()
@@ -85,9 +85,6 @@ class CollectionsActivity : AppCompatActivity() {
         val dialogColor : AlertDialog = builderColorPicker.build()
         colorButton.setOnClickListener { dialogColor.show() }
 
-        // Database
-        mTestCardViewModel = ViewModelProvider(this).get(TestCardViewModel::class.java)
-
         // Adding button
         val addingButton = findViewById<Button>(R.id.buttonCollections)
         addingButton.setOnClickListener {
@@ -105,23 +102,24 @@ class CollectionsActivity : AppCompatActivity() {
     }
 
 
-    private fun insertDataToDataBase(value1 : Int, value2 : String) : Boolean {
-        if (inputCheck(value1, value2)) {
-            val testCard = TestCard(0, value1, value2)
-            mTestCardViewModel.addTestCard(testCard)
+    private fun insertDataToDataBase(color : Int, text : String) : Boolean {
+        if (inputCheck(color, text)) {
+            val testCard = CollectionItem(0, color, text)
+            mCollectionItemViewModel.addTestCard(testCard)
             return true
         }
         return false
     }
 
-    private fun inputCheck(value1 : Int, value2 : String) : Boolean {
-        return value2.isNotEmpty()
+    private fun inputCheck(color : Int, text : String) : Boolean {
+        return text.isNotEmpty()
     }
 }
 
 
-class RecyclerViewAdapterCollections(val activity : CollectionsActivity, val collections : MutableList<Collection>): RecyclerView.Adapter<ViewHolderCollections> ()
+class RecyclerViewAdapterCollections(val activity : CollectionsActivity): RecyclerView.Adapter<ViewHolderCollections> ()
 {
+    private var collections = emptyList<CollectionItem>()
     private val builderSettings : AlertDialog.Builder = AlertDialog.Builder(activity)
     private val builderDeleteConfirm : AlertDialog.Builder = AlertDialog.Builder(activity)
 
@@ -145,6 +143,9 @@ class RecyclerViewAdapterCollections(val activity : CollectionsActivity, val col
         val colorButton = view.findViewById<Button>(R.id.buttonCollectionsSettingsColor)
         colorButton.setBackgroundColor(collections[position].color)
 
+
+
+/*
         // Settings builder
         builderSettings.setView(view)
         builderSettings.setCancelable(true);
@@ -198,16 +199,17 @@ class RecyclerViewAdapterCollections(val activity : CollectionsActivity, val col
 
         val dialogColor : AlertDialog = builderColorPicker.build()
         colorButton.setOnClickListener{dialogColor.show()}
-
-
-        // Checkbox
-        holder.checkBox.setOnCheckedChangeListener{ buttonView, isChecked ->
-            collections[position].isSelected = isChecked
-        }
+ */
     }
 
     override fun getItemCount(): Int {
         return collections.size
+    }
+
+    fun setData(newCollections : List<CollectionItem>)
+    {
+        collections = newCollections
+        notifyDataSetChanged()
     }
 }
 
