@@ -7,6 +7,6 @@ import androidx.room.PrimaryKey
 data class TestCard (
     @PrimaryKey(autoGenerate = true)
     val id : Int,
-    val value2 : String,
-    val value3 : String
+    val value1 : Int,
+    val value2 : String
 )

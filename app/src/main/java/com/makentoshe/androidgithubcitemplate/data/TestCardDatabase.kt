@@ -7,13 +7,13 @@ import androidx.room.RoomDatabase
 
 @Database(entities = [TestCard::class], version = 1, exportSchema = false)
 abstract class TestCardDatabase : RoomDatabase() {
-    abstract fun userDao(): TestCardDao
+    abstract fun testCardDao(): TestCardDao
 
     companion object {
         @Volatile
         private var INSTANCE: TestCardDatabase? = null
 
-        fun getDatabse(context: Context): TestCardDatabase {
+        fun getDatabase(context: Context): TestCardDatabase {
             val tempInstance = INSTANCE
             if (tempInstance != null) {
                 return tempInstance

@@ -11,9 +11,12 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.flask.colorpicker.builder.ColorPickerClickListener
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
+import com.makentoshe.androidgithubcitemplate.data.TestCard
+import com.makentoshe.androidgithubcitemplate.data.TestCardViewModel
 import android.view.LayoutInflater as LayoutInflater
 
 class Collection(var text : String, var isSelected : Boolean)
@@ -22,11 +25,17 @@ class Collection(var text : String, var isSelected : Boolean)
 }
 
 class CollectionsActivity : AppCompatActivity() {
+    private lateinit var mTestCardViewModel: TestCardViewModel
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_collections)
         title = "Наборы"
 
+        // Database
         val collections = (0 until 100).map { Collection("Collection #${it}", false) } as MutableList
 
         val recycleView = findViewById<RecyclerView>(R.id.recycleviewCollections)
@@ -50,6 +59,12 @@ class CollectionsActivity : AppCompatActivity() {
                 collection.color = background.color
                 recycleView.adapter?.notifyDataSetChanged()
                 dialog.dismiss()
+                if (insertDataToDataBase(collection.color, collection.text)) {
+                    Toast.makeText(this, "Added!", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, "Input is not correct!", Toast.LENGTH_LONG).show()
+                }
+
             })
         builderSettings.setNegativeButton("Cancel",
             DialogInterface.OnClickListener { dialog, id -> dialog.dismiss()
@@ -70,6 +85,9 @@ class CollectionsActivity : AppCompatActivity() {
         val dialogColor : AlertDialog = builderColorPicker.build()
         colorButton.setOnClickListener { dialogColor.show() }
 
+        // Database
+        mTestCardViewModel = ViewModelProvider(this).get(TestCardViewModel::class.java)
+
         // Adding button
         val addingButton = findViewById<Button>(R.id.buttonCollections)
         addingButton.setOnClickListener {
@@ -84,6 +102,20 @@ class CollectionsActivity : AppCompatActivity() {
         testStartButton.setOnClickListener {
             val intent = Intent(this, TestActivity::class.java)
             startActivity(intent)        }
+    }
+
+
+    private fun insertDataToDataBase(value1 : Int, value2 : String) : Boolean {
+        if (inputCheck(value1, value2)) {
+            val testCard = TestCard(0, value1, value2)
+            mTestCardViewModel.addTestCard(testCard)
+            return true
+        }
+        return false
+    }
+
+    private fun inputCheck(value1 : Int, value2 : String) : Boolean {
+        return value2.isNotEmpty()
     }
 }
 

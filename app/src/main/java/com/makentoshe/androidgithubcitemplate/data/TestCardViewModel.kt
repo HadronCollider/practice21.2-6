@@ -12,7 +12,7 @@ class TestCardViewModel(application: Application): AndroidViewModel(application)
     private val repository: TestCardRepository
 
     init {
-        val testCardDao = TestCardDatabase.getDatabse(application).userDao()
+        val testCardDao = TestCardDatabase.getDatabase(application).testCardDao()
         repository = TestCardRepository(testCardDao)
         readAllData = repository.readAllData
     }
