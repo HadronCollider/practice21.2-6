@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="55dp">
+    android:layout_height="80dp">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewMenuItem"
+        android:id="@+id/cardViewRedItem"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="8dp"
@@ -25,29 +25,51 @@
             android:layout_height="match_parent"
             android:padding="7dp">
 
-            <ImageButton
-                android:id="@+id/imageButtonMenuItem"
+            <TextView
+                android:id="@+id/second_element"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:alpha="1"
-                android:background="#00FFFFFF"
+                android:layout_marginStart="10dp"
+                android:text="El1"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textViewMenuItem"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@android:drawable/ic_dialog_dialer" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textViewMenuItem"
-                android:layout_width="match_parent"
+                android:id="@+id/first_element"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="64dp"
-                android:text="Math"
+                android:layout_marginEnd="10dp"
+                android:text="El2"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="389dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="6dp"
+                android:layout_marginBottom="43dp"
+                app:barrierDirection="left"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="1dp"
+                android:text="|"
+                android:textSize="34sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

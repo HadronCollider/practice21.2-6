@@ -24,9 +24,13 @@ class ConspectActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_conspect)
-        title = "Конспекты"
+        if (intent.hasExtra(IntentTags.TITLE_SUB_TO_CONSPECTS))
+            title = intent.getStringExtra(IntentTags.TITLE_SUB_TO_CONSPECTS) + " Conspects"
+        else {
+            title = "Conspects"
+        }
 
-        val conspects = (0 until 100).map { Conspect("Conspect #${it}") } as MutableList
+        val conspects = (0 until 10).map { Conspect("Conspect #${it}") } as MutableList
 
         val recycleView = findViewById<RecyclerView>(R.id.recycleviewConspects)
         recycleView.adapter = RecyclerViewAdapterConspects(this, conspects)
@@ -102,7 +106,7 @@ class RecyclerViewAdapterConspects(val activity : ConspectActivity, val conspect
         val view : View = layoutInflater.inflate(R.layout.conspects_settings, null)
         val deleteButton = view.findViewById<Button>(R.id.buttonConspectsSettingsDelete)
         val colorButton = view.findViewById<Button>(R.id.buttonConspectsSettingsColor)
-        colorButton.setBackgroundColor(conspects[position].color)
+        colorButton.setBackgroundColor(Color.parseColor("#CCCCCC"))
 
         // Settings builder
         builderSettings.setView(view)

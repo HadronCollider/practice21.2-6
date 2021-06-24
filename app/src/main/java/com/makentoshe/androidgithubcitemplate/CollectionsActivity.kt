@@ -71,7 +71,11 @@ class CollectionsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_collections)
-        title = "Наборы"
+        if (intent.hasExtra(IntentTags.TITLE_SUB_TO_COLLECTIONS))
+            title = intent.getStringExtra(IntentTags.TITLE_SUB_TO_COLLECTIONS) + " Collections"
+        else {
+            title = "Collections"
+        }
 
         // Layouts
         val layoutInflater : LayoutInflater = LayoutInflater.from(this)
@@ -226,6 +230,12 @@ class RecyclerViewAdapterCollections(val activity : CollectionsActivity): Recycl
         // Delete button
         deleteButton.setOnClickListener { dialogDeleteConfirm.show() }
 
+        // To redactor
+        holder.cardView.setOnClickListener {
+            val i = Intent(activity, RedactorActivity::class.java)
+            i.putExtra(IntentTags.TITLE_COLLECTION_TO_REDACTOR, collections[position].text)
+            activity.startActivity(i)
+        }
     }
 
     override fun getItemCount(): Int {
