@@ -31,7 +31,7 @@ class CollectionsActivity : AppCompatActivity() {
             title = "Collections"
         }
 
-        val collections = (0 until 100).map { Collection("Collection #${it}", false) } as MutableList
+        val collections = (0 until 10).map { Collection("Collection #${it}", false) } as MutableList
 
         val recycleView = findViewById<RecyclerView>(R.id.recycleviewCollections)
         recycleView.adapter = RecyclerViewAdapterCollections(this, collections)
@@ -115,7 +115,7 @@ class RecyclerViewAdapterCollections(val activity : CollectionsActivity, val col
         val view : View = layoutInflater.inflate(R.layout.collections_settings, null)
         val deleteButton = view.findViewById<Button>(R.id.buttonCollectionsSettingsDelete)
         val colorButton = view.findViewById<Button>(R.id.buttonCollectionsSettingsColor)
-        colorButton.setBackgroundColor(collections[position].color)
+        colorButton.setBackgroundColor( Color.parseColor("#CCCCCC"))
 
         // Settings builder
         builderSettings.setView(view)

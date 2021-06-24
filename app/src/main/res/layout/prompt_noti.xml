@@ -7,19 +7,11 @@
     android:orientation="vertical"
     android:padding="10dp" >
 
-    <TextView
-        android:id="@+id/noti_pro_time_text"
+    <TimePicker
+        android:id="@+id/noti_time_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Set time (HHMM):" />
-
-    <EditText
-        android:autofillHints=""
-        android:id="@+id/noti_pro_time_input"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="">
-    </EditText>
+        android:timePickerMode="spinner"/>
 
     <TextView
         android:id="@+id/noti_pro_text_text"
@@ -34,10 +26,4 @@
         android:layout_height="wrap_content"
         android:text="">
     </EditText>
-
-    <Button
-        android:id="@+id/noti_button_adding_color"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Color" />
 </LinearLayout>
