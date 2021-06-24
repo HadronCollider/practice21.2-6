@@ -176,6 +176,13 @@ class RecyclerViewAdapterCollections(val activity : CollectionsActivity, val col
         holder.checkBox.setOnCheckedChangeListener{ buttonView, isChecked ->
             collections[position].isSelected = isChecked
         }
+
+        //to redactor
+        holder.cardView.setOnClickListener {
+            val i = Intent(activity, RedactorActivity::class.java)
+            i.putExtra(IntentTags.TITLE_COLLECTION_TO_REDACTOR, collections[position].text)
+            activity.startActivity(i)
+        }
     }
 
     override fun getItemCount(): Int {

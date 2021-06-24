@@ -21,7 +21,10 @@ class RedactorActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_redactor)
-        title = "Collection redactor"
+        if (intent.hasExtra(IntentTags.TITLE_COLLECTION_TO_REDACTOR))
+            title = intent.getStringExtra(IntentTags.TITLE_COLLECTION_TO_REDACTOR) + " redactor"
+        else
+            title = "Collection redactor"
 
         val tests = (0 until 20).map { Tests("Определение #${it}", "Формулировка #${it}") } as MutableList
 
