@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pro_red_add"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp" >
+
+    <TextView
+        android:id="@+id/red_pro_text1_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="First element: "/>
+
+    <EditText
+        android:hint="Element"
+        android:id="@+id/red_pro_text1_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""/>
+
+    <TextView
+        android:id="@+id/red_pro_text2_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Second element: "/>
+
+    <EditText
+        android:hint="Element"
+        android:id="@+id/red_pro_tex2_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="">
+    </EditText>
+</LinearLayout>

@@ -11,6 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <receiver android:name=".TimeNotification"/>
+        <activity android:name=".RedactorActivity"/>
         <activity android:name=".SubjectActivity" />
         <activity android:name=".ConspectActivity" />
         <activity android:name=".CollectionsActivity" />
