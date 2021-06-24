@@ -25,7 +25,11 @@ class CollectionsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_collections)
-        title = "Collections"
+        if (intent.hasExtra(IntentTags.TITLE_SUB_TO_COLLECTIONS))
+            title = intent.getStringExtra(IntentTags.TITLE_SUB_TO_COLLECTIONS) + " Collections"
+        else {
+            title = "Collections"
+        }
 
         val collections = (0 until 100).map { Collection("Collection #${it}", false) } as MutableList
 

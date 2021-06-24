@@ -2,7 +2,8 @@ package com.makentoshe.androidgithubcitemplate
 
 class IntentTags {
     companion object {
-        public final val MENU_TO_SUB: String = "menu_sub"
-
+        const val TITLE_MENU_TO_SUB: String = "Tmenu_sub"
+        const val TITLE_SUB_TO_COLLECTIONS = "Tsub_col"
+        const val TITLE_SUB_TO_CONSPECTS = "Tsub_con"
     }
 }

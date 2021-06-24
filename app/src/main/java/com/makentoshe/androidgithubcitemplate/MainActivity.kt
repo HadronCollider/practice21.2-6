@@ -178,7 +178,7 @@ class SchoolSubRecyclerAdapter(val ctx : MainActivity, val subs : MutableList<Su
 
         holder.cardView.setOnClickListener {
             val i = Intent(ctx, SubjectActivity::class.java)
-            i.putExtra(IntentTags.MENU_TO_SUB, subs[position].text)
+            i.putExtra(IntentTags.TITLE_MENU_TO_SUB, subs[position].text)
             ctx.startActivity(i)
         }
     }
