@@ -1,17 +1,22 @@
 package com.makentoshe.androidgithubcitemplate
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import android.widget.TimePicker.OnTimeChangedListener
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.util.*
 
 
 class Noti(var text : String, var time: String, var isSelected : Boolean)
@@ -25,7 +30,7 @@ class NotificationsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_notifications)
         title = "Notifications"
 
-        val notis = (0 until 5).map { Noti("Notification #${it}", "0${it}000", false) } as MutableList
+        val notis = (0 until 1).map { Noti("Notification", "1200", false) } as MutableList
 
         val notis_recycler = findViewById<RecyclerView>(R.id.notis)
         notis_recycler.layoutManager = LinearLayoutManager(this)
@@ -45,8 +50,16 @@ class NotificationsActivity : AppCompatActivity() {
             mDialogBuilder
                     .setCancelable(false)
                     .setPositiveButton("Сохранить") { dialog, id ->
-                        var h = time_input.hour.toString()                                       //РАБОТАЕТ НЕ ТРОГАЙ
-                        var m = time_input.minute.toString()
+                        var h = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            time_input.hour.toString()
+                        } else {
+                            time_input.currentHour.toString()
+                        }                                           //РАБОТАЕТ, НЕ ТРОГАЙ
+                        var m = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            time_input.minute.toString()
+                        } else {
+                            time_input.currentMinute.toString()
+                        }
                         if (h.length == 1){
                             h = "0" + h
                         }
@@ -67,6 +80,8 @@ class NotificationsActivity : AppCompatActivity() {
 }
 
 class NotiRecyclerAdapter(val notis: MutableList<Noti>, val ctx: NotificationsActivity): RecyclerView.Adapter<NotiViewHolder>() {
+   private val am = ctx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotiViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_notifications, parent, false)
         return NotiViewHolder(itemView)
@@ -75,6 +90,7 @@ class NotiRecyclerAdapter(val notis: MutableList<Noti>, val ctx: NotificationsAc
     override fun onBindViewHolder(holder: NotiViewHolder, position: Int) {
         holder.text?.text = notis[position].text
         holder.time?.text = "${notis[position].time[0]}${notis[position].time[1]}:${notis[position].time[2]}${notis[position].time[3]}"
+        holder.switch?.isChecked = notis[position].isSelected
 
         holder.del_but?.setOnClickListener {
             val mDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(ctx)
@@ -86,6 +102,7 @@ class NotiRecyclerAdapter(val notis: MutableList<Noti>, val ctx: NotificationsAc
                         dialog.cancel()
                         notifyItemRemoved(position)
                         notifyItemRangeChanged(position, notis.size)
+                        //am.cancel()
                     }
                     .setNegativeButton("Cancel") { dialog, id -> dialog.cancel() }
             val alertDialog: AlertDialog = mDialogBuilder.create()
@@ -93,6 +110,9 @@ class NotiRecyclerAdapter(val notis: MutableList<Noti>, val ctx: NotificationsAc
         }
         holder.switch?.setOnCheckedChangeListener { compoundButton, b ->
             notis[position].isSelected = b
+            if (notis[position].isSelected){
+                restartNotify(notis[position])
+            }
         }
         holder.lay?.setOnClickListener{
             val li: LayoutInflater = LayoutInflater.from(ctx)
@@ -110,8 +130,16 @@ class NotiRecyclerAdapter(val notis: MutableList<Noti>, val ctx: NotificationsAc
             mDialogBuilder
                     .setCancelable(false)
                     .setPositiveButton("Сохранить") { dialog, id ->
-                        var h = time_input.hour.toString()                                       //РАБОТАЕТ НЕ ТРОГАЙ
-                        var m = time_input.minute.toString()
+                        var h = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            time_input.hour.toString()
+                        } else {
+                            time_input.currentHour.toString()
+                        }                                           //РАБОТАЕТ, НЕ ТРОГАЙ
+                        var m = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            time_input.minute.toString()
+                        } else {
+                            time_input.currentMinute.toString()
+                        }
                         if (h.length == 1){
                             h = "0" + h
                         }
@@ -131,6 +159,27 @@ class NotiRecyclerAdapter(val notis: MutableList<Noti>, val ctx: NotificationsAc
     }
 
     override fun getItemCount() = notis.size
+
+    private fun restartNotify(not: Noti) {
+
+        val i = Intent(ctx, TimeNotification::class.java)
+        i.putExtra("noti_text", not.text)
+        val pendingIntent = PendingIntent.getBroadcast(ctx, 0,
+                i, 0)
+        am.cancel(pendingIntent)
+        val h = "${not.time[0]}${not.time[1]}".toInt()
+        val m = "${not.time[2]}${not.time[3]}".toInt()
+        val calendar: Calendar = Calendar.getInstance()
+        val cal = Calendar.getInstance()
+        calendar.set(Calendar.YEAR, cal.get(Calendar.YEAR))
+        calendar.set(Calendar.MONTH, cal.get(Calendar.MONTH))
+        calendar.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH))
+        calendar.set(Calendar.HOUR_OF_DAY, h)
+        calendar.set(Calendar.MINUTE, m)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent)
+    }
 }
 
 class NotiViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
