@@ -39,10 +39,4 @@
         android:layout_height="47dp"
         android:text="Color" />
 
-    <Button
-        android:id="@+id/buttonConspectsSettingsDelete"
-        android:layout_width="match_parent"
-        android:layout_height="47dp"
-        android:text="Delete" />
-
 </LinearLayout>
