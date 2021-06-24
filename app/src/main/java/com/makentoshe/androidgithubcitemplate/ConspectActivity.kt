@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.flask.colorpicker.builder.ColorPickerClickListener
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 
-class Conspect(var text : String)
+class Conspect(var text : String, var url : String)
 {
     var color = Color.parseColor("#FFFFFF")
 }
@@ -30,7 +30,7 @@ class ConspectActivity : AppCompatActivity() {
             title = "Conspects"
         }
 
-        val conspects = (0 until 10).map { Conspect("Conspect #${it}") } as MutableList
+        val conspects = (0 until 10).map { Conspect("Conspect #${it}", "") } as MutableList
 
         val recycleView = findViewById<RecyclerView>(R.id.recycleviewConspects)
         recycleView.adapter = RecyclerViewAdapterConspects(this, conspects)
@@ -46,8 +46,9 @@ class ConspectActivity : AppCompatActivity() {
         builderSettings.setCancelable(true);
         builderSettings.setPositiveButton("Add",
             DialogInterface.OnClickListener { dialog, id ->
-                val newText = view.findViewById<EditText>(R.id.editTextConspectsAdding)
-                val conspect = Conspect(newText?.text.toString() )
+                val newText = view.findViewById<EditText>(R.id.con_ed_text1_input)
+                val newUrl = view.findViewById<EditText>(R.id.con_ed_url_inpit)
+                val conspect = Conspect(newText?.text.toString(), newUrl?.text.toString())
                 conspects.add(conspect)
                 val background = colorButton.background as ColorDrawable
                 conspect.color = background.color
@@ -77,9 +78,6 @@ class ConspectActivity : AppCompatActivity() {
         val addingButton = findViewById<Button>(R.id.buttonConspects)
         addingButton.setOnClickListener {
             dialogSettings.show()
-
-            val editText = dialogSettings.findViewById<EditText>(R.id.editTextConspectsAdding)
-            editText?.setText("Enter name")
         }
     }
 }
@@ -106,15 +104,17 @@ class RecyclerViewAdapterConspects(val activity : ConspectActivity, val conspect
         val view : View = layoutInflater.inflate(R.layout.conspects_settings, null)
         val deleteButton = view.findViewById<Button>(R.id.buttonConspectsSettingsDelete)
         val colorButton = view.findViewById<Button>(R.id.buttonConspectsSettingsColor)
-        colorButton.setBackgroundColor(Color.parseColor("#CCCCCC"))
+        colorButton.setBackgroundColor(conspects[position].color)
 
         // Settings builder
         builderSettings.setView(view)
         builderSettings.setCancelable(true);
         builderSettings.setPositiveButton("Apply",
             DialogInterface.OnClickListener { dialog, id ->
-                val newText = view.findViewById<EditText>(R.id.editTextConspectsSettings)
+                val newText = view.findViewById<EditText>(R.id.con_ed_text1_input)
+                val newUrl = view.findViewById<EditText>(R.id.con_ed_url_inpit)
                 conspects[position].text = newText?.text.toString()
+                conspects[position].url = newText?.text.toString()
                 val background = colorButton.background as ColorDrawable
                 conspects[position].color = background.color
                 notifyItemChanged(position)
@@ -127,8 +127,10 @@ class RecyclerViewAdapterConspects(val activity : ConspectActivity, val conspect
         holder.imageButton.setOnClickListener{
             dialogSettings.show()
 
-            val editText = dialogSettings.findViewById<EditText>(R.id.editTextConspectsSettings)
+            val editText = dialogSettings.findViewById<EditText>(R.id.con_ed_text1_input)
             editText?.setText(conspects[position].text)
+            val editUrl = dialogSettings.findViewById<EditText>(R.id.con_ed_url_inpit)
+            editUrl?.setText(conspects[position].url)
         }
 
         // Delete confirm builder
