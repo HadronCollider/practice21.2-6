@@ -1,5 +1,6 @@
 package com.makentoshe.androidgithubcitemplate
 
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
@@ -20,18 +21,65 @@ import com.makentoshe.androidgithubcitemplate.data.CollectionItem
 import com.makentoshe.androidgithubcitemplate.data.CollectionItemViewModel
 import android.view.LayoutInflater as LayoutInflater
 
+
+fun buildColorPickerDialog(context : Context, message : String,
+                           posButtonText : String, negButtonText : String,
+                           posButton : ColorPickerClickListener) : AlertDialog {
+    val builder : ColorPickerDialogBuilder = ColorPickerDialogBuilder.with(context)
+    builder.setTitle(message)
+    builder.setPositiveButton(posButtonText, posButton)
+    builder.setNegativeButton(negButtonText,
+        DialogInterface.OnClickListener { dialog, id->
+            dialog.dismiss()
+        })
+    return builder.build()
+}
+
+fun buildSettingsDialog(context: Context, view: View,
+                        posButtonText : String, negButtonText : String,
+                        posButton : DialogInterface.OnClickListener ) : AlertDialog {
+    val builder : AlertDialog.Builder = AlertDialog.Builder(context)
+    builder.setView(view)
+    builder.setCancelable(true);
+    builder.setPositiveButton(posButtonText, posButton)
+    builder.setNegativeButton(negButtonText,
+        DialogInterface.OnClickListener { dialog, id ->
+            dialog.dismiss()
+        })
+    return builder.create()
+}
+
+fun buildConfirmDialog(context: Context, message : String,
+                       posButtonText : String, negButtonText : String,
+                       posButton : DialogInterface.OnClickListener) : AlertDialog {
+    val builder : AlertDialog.Builder = AlertDialog.Builder(context)
+    builder.setMessage(message)
+    builder.setCancelable(true)
+    builder.setPositiveButton(posButtonText, posButton)
+    builder.setNegativeButton(negButtonText,
+        DialogInterface.OnClickListener { dialog, id -> dialog.dismiss()})
+    return builder.create()
+}
+
+fun inputCheck(color : Int, text : String) : Boolean {
+    return text.isNotEmpty()
+}
+
 class CollectionsActivity : AppCompatActivity() {
     private lateinit var mCollectionItemViewModel: CollectionItemViewModel
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
-
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_collections)
         title = "Наборы"
 
-        //val collections = (0 until 100).map { Collection("Collection #${it}", false) } as MutableList
+        // Layouts
+        val layoutInflater : LayoutInflater = LayoutInflater.from(this)
+        val view : View = layoutInflater.inflate(R.layout.collections_adding, null)
+        val colorButton = view.findViewById<Button>(R.id.buttonCollectionsAddingColor)
+        val addingButton = findViewById<Button>(R.id.buttonCollections)
+        val testStartButton = findViewById<Button>(R.id.buttonTestStart)
+
 
         // Recycler view
         val recycleView = findViewById<RecyclerView>(R.id.recycleviewCollections)
@@ -44,76 +92,58 @@ class CollectionsActivity : AppCompatActivity() {
                 collections -> adapter.setData(collections)
         })
 
-        val builderSettings : AlertDialog.Builder = AlertDialog.Builder(this)
-        // Settings builder
-        val layoutInflater : LayoutInflater = LayoutInflater.from(this)
-        val view : View = layoutInflater.inflate(R.layout.collections_adding, null)
-        val colorButton = view.findViewById<Button>(R.id.buttonCollectionsAddingColor)
-        colorButton.setBackgroundColor(Color.parseColor("#FFFFFF"))
-
-        builderSettings.setView(view)
-        builderSettings.setCancelable(true);
-        builderSettings.setPositiveButton("Add",
+        // Settings dialog
+        val dialogSettings : AlertDialog = buildSettingsDialog(this, view,
+            "Add", "Cancel",
             DialogInterface.OnClickListener { dialog, id ->
                 val newText = view.findViewById<EditText>(R.id.editTextCollectionsAdding)
                 val background = colorButton.background as ColorDrawable
-                recycleView.adapter?.notifyDataSetChanged()
-                dialog.dismiss()
+
                 if (insertDataToDataBase(background.color, newText?.text.toString())) {
                     Toast.makeText(this, "Added!", Toast.LENGTH_LONG).show()
+                    recycleView.adapter?.notifyDataSetChanged()
                 } else {
                     Toast.makeText(this, "Input is not correct!", Toast.LENGTH_LONG).show()
+                    recycleView.adapter?.notifyDataSetChanged()
                 }
 
-            })
-        builderSettings.setNegativeButton("Cancel",
-            DialogInterface.OnClickListener { dialog, id -> dialog.dismiss()
-            })
-
-        val dialogSettings : AlertDialog = builderSettings.create()
-
-        // Color picker
-        val builderColorPicker : ColorPickerDialogBuilder = ColorPickerDialogBuilder.with(this)
-        builderColorPicker.setTitle("Choose color")
-
-        builderColorPicker.setPositiveButton("Select",
-            ColorPickerClickListener { dialog, color, allColors ->
-                colorButton.setBackgroundColor(color)
                 dialog.dismiss()
-            })
-
-        val dialogColor : AlertDialog = builderColorPicker.build()
-        colorButton.setOnClickListener { dialogColor.show() }
+                })
 
         // Adding button
-        val addingButton = findViewById<Button>(R.id.buttonCollections)
         addingButton.setOnClickListener {
+            colorButton.setBackgroundColor(Color.parseColor("#FFFFFF"))
             dialogSettings.show()
 
             val editText = dialogSettings.findViewById<EditText>(R.id.editTextCollectionsAdding)
             editText?.setText("Enter name")
         }
 
+        // Color dialog
+        val dialogColor : AlertDialog = buildColorPickerDialog(this, "Choose color", "Select", "Cancel",
+            ColorPickerClickListener{ dialog, color, allColors ->
+                colorButton.setBackgroundColor(color)
+                dialog.dismiss()
+            })
+
+        // Color button
+        colorButton.setOnClickListener { dialogColor.show() }
+
         // Test start
-        val testStartButton = findViewById<Button>(R.id.buttonTestStart)
         testStartButton.setOnClickListener {
             val intent = Intent(this, TestActivity::class.java)
-            startActivity(intent)        }
+            startActivity(intent) }
     }
-
 
     private fun insertDataToDataBase(color : Int, text : String) : Boolean {
         if (inputCheck(color, text)) {
-            val testCard = CollectionItem(0, color, text)
-            mCollectionItemViewModel.addTestCard(testCard)
+            val collectionItem = CollectionItem(0, color, text)
+            mCollectionItemViewModel.addCollectionItem(collectionItem)
             return true
         }
         return false
     }
 
-    private fun inputCheck(color : Int, text : String) : Boolean {
-        return text.isNotEmpty()
-    }
 }
 
 
@@ -122,6 +152,9 @@ class RecyclerViewAdapterCollections(val activity : CollectionsActivity): Recycl
     private var collections = emptyList<CollectionItem>()
     private val builderSettings : AlertDialog.Builder = AlertDialog.Builder(activity)
     private val builderDeleteConfirm : AlertDialog.Builder = AlertDialog.Builder(activity)
+    lateinit var currentItem : CollectionItem
+    private lateinit var mCollectionItemViewModel: CollectionItemViewModel
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderCollections {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.collections_item, parent, false)
@@ -131,79 +164,87 @@ class RecyclerViewAdapterCollections(val activity : CollectionsActivity): Recycl
     override fun onBindViewHolder(holder: ViewHolderCollections, position: Int) {
         holder.textView.text = collections[position].text
         holder.cardView.setCardBackgroundColor(collections[position].color)
-
         holder.textView.setTextColor(Color.parseColor("#000000"))
-        //holder.imageButton.setOnClickListener{collections[position].onClick()}
-        //holder.imageButton.setOnClick
 
-        /* Dialogs */
+        // Layouts
         val layoutInflater : LayoutInflater = LayoutInflater.from(activity)
         val view : View = layoutInflater.inflate(R.layout.collections_settings, null)
         val deleteButton = view.findViewById<Button>(R.id.buttonCollectionsSettingsDelete)
         val colorButton = view.findViewById<Button>(R.id.buttonCollectionsSettingsColor)
-        colorButton.setBackgroundColor(collections[position].color)
+        val textSettings = view.findViewById<EditText>(R.id.editTextCollectionsSettings)
 
+        // Database
+        mCollectionItemViewModel = ViewModelProvider(activity).get(CollectionItemViewModel::class.java)
 
-
-/*
-        // Settings builder
-        builderSettings.setView(view)
-        builderSettings.setCancelable(true);
-        builderSettings.setPositiveButton("Apply",
+        // Settings dialog
+        val dialogSettings : AlertDialog = buildSettingsDialog(activity, view,
+            "Apply", "Cancel",
             DialogInterface.OnClickListener { dialog, id ->
                 val newText = view.findViewById<EditText>(R.id.editTextCollectionsSettings)
-                collections[position].text = newText?.text.toString()
                 val background = colorButton.background as ColorDrawable
-                collections[position].color = background.color
-                notifyItemChanged(position)
+
+                if (updateDataInDataBase(collections[position], background.color, newText?.text.toString())) {
+                    Toast.makeText(activity, "Changed!", Toast.LENGTH_LONG).show()
+                    notifyDataSetChanged()
+                } else {
+                    Toast.makeText(activity, "Input is not correct!", Toast.LENGTH_LONG).show()
+                    notifyDataSetChanged()
+                }
+
                 dialog.dismiss()
             })
-        builderSettings.setNegativeButton("Cancel",
-            DialogInterface.OnClickListener { dialog, id -> dialog.dismiss()})
 
-        val dialogSettings : AlertDialog = builderSettings.create()
-        holder.imageButton.setOnClickListener{
+        // Setting button
+        holder.imageButton.setOnClickListener {
+            textSettings.setText(collections[position].text)
+            colorButton.setBackgroundColor(collections[position].color)
             dialogSettings.show()
-
-            val editText = dialogSettings.findViewById<EditText>(R.id.editTextCollectionsSettings)
-            editText?.setText(collections[position].text)
         }
 
-        // Delete confirm builder
-        builderDeleteConfirm.setMessage("Delete collection?")
-        builderDeleteConfirm.setCancelable(true)
-        builderDeleteConfirm.setPositiveButton("Yes",
-            DialogInterface.OnClickListener { dialog, id ->
-                collections.removeAt(position)
-                dialogSettings.cancel()
-                notifyItemRemoved(position)
-                notifyItemRangeChanged(position, collections.size)
-
-            })
-        builderDeleteConfirm.setNegativeButton("Cancel",
-            DialogInterface.OnClickListener { dialog, id -> dialog.dismiss()})
-        val dialogDeleteConfirm : AlertDialog = builderDeleteConfirm.create()
-
-        deleteButton.setOnClickListener{dialogDeleteConfirm.show()}
-
-        // Color picker
-        val builderColorPicker : ColorPickerDialogBuilder = ColorPickerDialogBuilder.with(activity)
-        builderColorPicker.setTitle("Choose color")
-
-        builderColorPicker.setPositiveButton("Select",
-            ColorPickerClickListener { dialog, color, allColors ->
+        // Color dialog
+        val dialogColor : AlertDialog = buildColorPickerDialog(activity, "Choose color","Select", "Cancel",
+            ColorPickerClickListener{ dialog, color, allColors ->
                 colorButton.setBackgroundColor(color)
                 dialog.dismiss()
-                notifyItemChanged(position)
             })
 
-        val dialogColor : AlertDialog = builderColorPicker.build()
-        colorButton.setOnClickListener{dialogColor.show()}
- */
+        // Color button
+        colorButton.setOnClickListener { dialogColor.show() }
+
+        // Delete confirm dialog
+        val dialogDeleteConfirm : AlertDialog = buildConfirmDialog(activity, "Delete ${collections[position].text}?",
+                "Yes", "Cancel",
+                DialogInterface.OnClickListener { dialog, id ->
+                    deleteDataFromDataBase(collections[position])
+                    notifyItemRemoved(position)
+                    notifyItemRangeChanged(position, collections.size)
+
+                    dialogSettings.cancel()
+                    dialog.dismiss()
+                })
+
+        // Delete button
+        deleteButton.setOnClickListener { dialogDeleteConfirm.show() }
+
     }
 
     override fun getItemCount(): Int {
         return collections.size
+    }
+
+    private fun updateDataInDataBase(currentItem : CollectionItem, color : Int, text : String) : Boolean
+    {
+        if (inputCheck(color, text)) {
+            val collectionItem = CollectionItem(currentItem.id, color, text)
+            mCollectionItemViewModel.updateCollectionItem(collectionItem)
+            return true
+        }
+        return false
+    }
+
+    private fun deleteDataFromDataBase(currentItem : CollectionItem)
+    {
+        mCollectionItemViewModel.deleteCollectionItem(currentItem)
     }
 
     fun setData(newCollections : List<CollectionItem>)

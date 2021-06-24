@@ -17,9 +17,21 @@ class CollectionItemViewModel(application: Application): AndroidViewModel(applic
         readAllData = repository.readAllData
     }
 
-    fun addTestCard(testCard : CollectionItem) {
+    fun addCollectionItem(collectionItem : CollectionItem) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.addCollectionItem(testCard)
+            repository.addCollectionItem(collectionItem)
+        }
+    }
+
+    fun updateCollectionItem(collectionItem : CollectionItem) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateCollectionItem(collectionItem)
+        }
+    }
+
+    fun deleteCollectionItem(collectionItem : CollectionItem) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteCollectionItem(collectionItem)
         }
     }
 
