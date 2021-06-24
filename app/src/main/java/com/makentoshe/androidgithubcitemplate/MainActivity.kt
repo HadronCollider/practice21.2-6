@@ -1,13 +1,24 @@
 package com.makentoshe.androidgithubcitemplate
 
+import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.flask.colorpicker.builder.ColorPickerClickListener
+import com.flask.colorpicker.builder.ColorPickerDialogBuilder
+
+class Subject(var text : String)
+{
+    var color = Color.parseColor("#FFFFFF")
+}
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,13 +26,56 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val school_sub = findViewById<RecyclerView>(R.id.recycleviewMenu)
-        school_sub.layoutManager = LinearLayoutManager(this)
-        school_sub.adapter = SchoolSubRecyclerAdapter(1, this)
+        val subs = (0 until 20).map { Subject("Sub #${it}") } as MutableList
 
-        val add_button = findViewById<Button>(R.id.buttonMenu)
-        add_button.setOnClickListener {
-            makeDialogWindow()
+        val school_sub = findViewById<RecyclerView>(R.id.school_subjects)
+        school_sub.layoutManager = LinearLayoutManager(this)
+        school_sub.adapter = SchoolSubRecyclerAdapter(this, subs)
+
+        val builderSettings : AlertDialog.Builder = AlertDialog.Builder(this)
+        // Settings builder
+        val layoutInflater : LayoutInflater = LayoutInflater.from(this)
+        val view : View = layoutInflater.inflate(R.layout.prompt_main, null)
+        val colorButton = view.findViewById<Button>(R.id.main_pro_color_but)
+
+
+        builderSettings.setView(view)
+        builderSettings.setCancelable(true);
+        builderSettings.setPositiveButton("Add",
+                DialogInterface.OnClickListener { dialog, id ->
+                    val newText = view.findViewById<EditText>(R.id.main_pro_text_input)
+                    val sub = Subject(newText?.text.toString() )
+                    subs.add(sub)
+                    val background = colorButton.background as ColorDrawable
+                    sub.color = background.color
+                    school_sub.adapter?.notifyDataSetChanged()
+                    dialog.dismiss()
+                })
+        builderSettings.setNegativeButton("Cancel",
+                DialogInterface.OnClickListener { dialog, id -> dialog.dismiss()
+                })
+
+        val dialogSettings : AlertDialog = builderSettings.create()
+
+        // Color picker
+        val builderColorPicker : ColorPickerDialogBuilder = ColorPickerDialogBuilder.with(this)
+        builderColorPicker.setTitle("Choose color")
+
+        builderColorPicker.setPositiveButton("Select",
+                ColorPickerClickListener { dialog, color, allColors ->
+                    colorButton.setBackgroundColor(color)
+                    dialog.dismiss()
+                })
+
+        val dialogColor : AlertDialog = builderColorPicker.build()
+        colorButton.setOnClickListener { dialogColor.show() }
+
+        // Adding button
+        val addingButton = findViewById<Button>(R.id.main_add_button)
+        addingButton.setOnClickListener {
+            colorButton.setBackgroundColor(Color.parseColor("#FFFFFF"))
+            view.findViewById<EditText>(R.id.main_pro_text_input).setText("")
+            dialogSettings.show()
         }
     }
 
@@ -44,34 +98,11 @@ class MainActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
-    fun makeDialogWindow () {
-        val li: LayoutInflater = LayoutInflater.from(this)
-        val promptsView: View = li.inflate(R.layout.prompt_main, null)
-
-        //Создаем AlertDialog
-        val mDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
-
-        //Настраиваем prompt.xml для нашего AlertDialog:
-        mDialogBuilder.setView(promptsView)
-
-        //Настраиваем отображение поля для ввода текста в открытом диалоге:
-        val text_input = promptsView.findViewById<EditText>(R.id.main_pro_text_input)
-
-        mDialogBuilder
-            .setCancelable(false)
-            .setPositiveButton("Сохранить") { dialog, id ->
-                if (text_input != null) {
-                    //add_button.setText(text_input.text.toString())                                 //TODO
-                }
-            }
-            .setNegativeButton("Отмена") { dialog, id -> dialog.cancel()}
-        val alertDialog: AlertDialog = mDialogBuilder.create()
-        alertDialog.show()
-    }
 }
 
-class SchoolSubRecyclerAdapter(val strings: Int, val ctx: MainActivity): RecyclerView.Adapter<SchoolSubViewHolder>() {
+class SchoolSubRecyclerAdapter(val ctx : MainActivity, val subs : MutableList<Subject>): RecyclerView.Adapter<SchoolSubViewHolder>() {
+    private val builderSettings : AlertDialog.Builder = AlertDialog.Builder(ctx)
+    private val builderDeleteConfirm : AlertDialog.Builder = AlertDialog.Builder(ctx)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SchoolSubViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_main, parent, false)
@@ -79,50 +110,84 @@ class SchoolSubRecyclerAdapter(val strings: Int, val ctx: MainActivity): Recycle
     }
 
     override fun onBindViewHolder(holder: SchoolSubViewHolder, position: Int) {
-        holder.menu_but?.setOnClickListener {
-            makeDialogWindow()
+        holder.textView.text = subs[position].text
+        holder.cardView.setCardBackgroundColor(subs[position].color)
+
+        holder.textView.setTextColor(Color.parseColor("#000000"))
+
+        /* Dialogs */
+        val layoutInflater : LayoutInflater = LayoutInflater.from(ctx)
+        val view : View = layoutInflater.inflate(R.layout.main_item_settings, null)
+        val deleteButton = view.findViewById<Button>(R.id.buttonMainSettingsDelete)
+        val colorButton = view.findViewById<Button>(R.id.buttonMainSettingsColor)
+        colorButton.setBackgroundColor(subs[position].color)
+
+        // Settings builder
+        builderSettings.setView(view)
+        builderSettings.setCancelable(true);
+        builderSettings.setPositiveButton("Apply",
+                DialogInterface.OnClickListener { dialog, id ->
+                    val newText = view.findViewById<EditText>(R.id.editTextMainSettings)
+                    subs[position].text = newText?.text.toString()
+                    val background = colorButton.background as ColorDrawable
+                    subs[position].color = background.color
+                    notifyItemChanged(position)
+                    dialog.dismiss()
+                })
+        builderSettings.setNegativeButton("Cancel",
+                DialogInterface.OnClickListener { dialog, id -> dialog.dismiss()})
+
+        val dialogSettings : AlertDialog = builderSettings.create()
+        holder.imageButton.setOnClickListener{
+            dialogSettings.show()
+
+            val editText = dialogSettings.findViewById<EditText>(R.id.editTextMainSettings)
+            editText?.setText(subs[position].text)
         }
 
-        holder.name?.setOnClickListener {
-            val intent = Intent(ctx, SubjectActivity::class.java)
-            ctx.startActivity(intent)
+        // Delete confirm builder
+        builderDeleteConfirm.setMessage("Delete collection?")
+        builderDeleteConfirm.setCancelable(true)
+        builderDeleteConfirm.setPositiveButton("Yes",
+                DialogInterface.OnClickListener { dialog, id ->
+                    subs.removeAt(position)
+                    dialogSettings.cancel()
+                    notifyItemRemoved(position)
+                    notifyItemRangeChanged(position, subs.size)
+                    Toast.makeText(ctx, "Subject deleted", Toast.LENGTH_SHORT).show()
+                })
+        builderDeleteConfirm.setNegativeButton("Cancel",
+                DialogInterface.OnClickListener { dialog, id -> dialog.dismiss()})
+        val dialogDeleteConfirm : AlertDialog = builderDeleteConfirm.create()
+
+        deleteButton.setOnClickListener{dialogDeleteConfirm.show()}
+
+        // Color picker
+        val builderColorPicker : ColorPickerDialogBuilder = ColorPickerDialogBuilder.with(ctx)
+        builderColorPicker.setTitle("Choose color")
+
+        builderColorPicker.setPositiveButton("Select",
+                ColorPickerClickListener { dialog, color, allColors ->
+                    colorButton.setBackgroundColor(color)
+                    dialog.dismiss()
+                    notifyItemChanged(position)
+                })
+
+        val dialogColor : AlertDialog = builderColorPicker.build()
+        colorButton.setOnClickListener{dialogColor.show()}
+
+        holder.cardView.setOnClickListener {
+            val i = Intent(ctx, SubjectActivity::class.java)
+            i.putExtra(IntentTags.MENU_TO_SUB, subs[position].text)
+            ctx.startActivity(i)
         }
     }
 
-    override fun getItemCount() = strings
-
-    private fun makeDialogWindow () {
-        val li: LayoutInflater = LayoutInflater.from(ctx)
-        val promptsView: View = li.inflate(R.layout.prompt_main, null)
-
-        //Создаем AlertDialog
-        val mDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(ctx)
-
-        //Настраиваем prompt.xml для нашего AlertDialog:
-        mDialogBuilder.setView(promptsView)
-
-        //Настраиваем отображение поля для ввода текста в открытом диалоге:
-        val text_input = promptsView.findViewById<EditText>(R.id.main_pro_text_input)
-
-        mDialogBuilder
-                .setCancelable(false)
-                .setPositiveButton("Сохранить") { dialog, id ->
-                    if (text_input != null) {
-                        //add_button.setText(text_input.text.toString())                             //TODO
-                    }
-                }
-                .setNegativeButton("Отмена") { dialog, id -> dialog.cancel()}
-        val alertDialog: AlertDialog = mDialogBuilder.create()
-        alertDialog.show()
-    }
+    override fun getItemCount() = subs.size
 }
 
 class SchoolSubViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    var name: TextView? = null
-    var menu_but: TextView? = null
-
-    init {
-        name = itemView.findViewById(R.id.textViewMenuItem)
-        menu_but = itemView.findViewById(R.id.buttonMenu)
-    }
+    val textView: TextView = itemView.findViewById(R.id.textViewMenuItem)
+    val imageButton: ImageButton = itemView.findViewById(R.id.imageButtonMenuItem)
+    val cardView: CardView = itemView.findViewById(R.id.cardViewMenuItem)
 }

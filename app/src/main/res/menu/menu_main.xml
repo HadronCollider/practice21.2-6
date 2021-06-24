@@ -8,11 +8,6 @@
         android:title="Notification"
         app:showAsAction="never" />
     <item
-        android:id="@+id/change_theme_but"
-        android:orderInCategory="100"
-        android:title="Change theme"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/info_but"
         android:orderInCategory="100"
         android:title="About"
