@@ -14,7 +14,6 @@ import androidx.core.app.NotificationCompat
 public class TimeNotification : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        Toast.makeText(context, "noti234", Toast.LENGTH_SHORT).show()
         var txt = ""
         if (intent!!.hasExtra("noti_text")){
             txt = intent!!.getStringExtra("noti_text")

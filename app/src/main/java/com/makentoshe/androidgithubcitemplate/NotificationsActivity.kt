@@ -102,7 +102,8 @@ class NotiRecyclerAdapter(val notis: MutableList<Noti>, val ctx: NotificationsAc
                         dialog.cancel()
                         notifyItemRemoved(position)
                         notifyItemRangeChanged(position, notis.size)
-                        //am.cancel()
+                        removeNotify(position)
+                        Toast.makeText(ctx, "Notification deleted", Toast.LENGTH_SHORT).show()
                     }
                     .setNegativeButton("Cancel") { dialog, id -> dialog.cancel() }
             val alertDialog: AlertDialog = mDialogBuilder.create()
@@ -111,7 +112,9 @@ class NotiRecyclerAdapter(val notis: MutableList<Noti>, val ctx: NotificationsAc
         holder.switch?.setOnCheckedChangeListener { compoundButton, b ->
             notis[position].isSelected = b
             if (notis[position].isSelected){
-                restartNotify(notis[position])
+                restartNotify(notis[position], position)
+            } else {
+                removeNotify(position)
             }
         }
         holder.lay?.setOnClickListener{
@@ -160,11 +163,11 @@ class NotiRecyclerAdapter(val notis: MutableList<Noti>, val ctx: NotificationsAc
 
     override fun getItemCount() = notis.size
 
-    private fun restartNotify(not: Noti) {
+    private fun restartNotify(not: Noti, pos: Int) {
 
         val i = Intent(ctx, TimeNotification::class.java)
         i.putExtra("noti_text", not.text)
-        val pendingIntent = PendingIntent.getBroadcast(ctx, 0,
+        val pendingIntent = PendingIntent.getBroadcast(ctx, pos,
                 i, 0)
         am.cancel(pendingIntent)
         val h = "${not.time[0]}${not.time[1]}".toInt()
@@ -178,7 +181,14 @@ class NotiRecyclerAdapter(val notis: MutableList<Noti>, val ctx: NotificationsAc
         calendar.set(Calendar.MINUTE, m)
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
-        am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent)
+        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent)
+    }
+
+    private fun removeNotify(pos: Int){
+        val i = Intent(ctx, TimeNotification::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(ctx, pos,
+                i, 0)
+        am.cancel(pendingIntent)
     }
 }
 
