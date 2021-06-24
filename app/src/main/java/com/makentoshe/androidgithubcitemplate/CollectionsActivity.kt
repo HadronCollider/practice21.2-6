@@ -136,7 +136,8 @@ class CollectionsActivity : AppCompatActivity() {
         // Test start
         testStartButton.setOnClickListener {
             val intent = Intent(this, TestActivity::class.java)
-            startActivity(intent) }
+            startActivity(intent)
+        }
     }
 
     private fun insertDataToDataBase(color : Int, text : String) : Boolean {
@@ -154,9 +155,6 @@ class CollectionsActivity : AppCompatActivity() {
 class RecyclerViewAdapterCollections(val activity : CollectionsActivity): RecyclerView.Adapter<ViewHolderCollections> ()
 {
     private var collections = emptyList<CollectionItem>()
-    private val builderSettings : AlertDialog.Builder = AlertDialog.Builder(activity)
-    private val builderDeleteConfirm : AlertDialog.Builder = AlertDialog.Builder(activity)
-    lateinit var currentItem : CollectionItem
     private lateinit var mCollectionItemViewModel: CollectionItemViewModel
 
 
@@ -232,9 +230,10 @@ class RecyclerViewAdapterCollections(val activity : CollectionsActivity): Recycl
 
         // To redactor
         holder.cardView.setOnClickListener {
-            val i = Intent(activity, RedactorActivity::class.java)
-            i.putExtra(IntentTags.TITLE_COLLECTION_TO_REDACTOR, collections[position].text)
-            activity.startActivity(i)
+            val intent = Intent(activity, RedactorActivity::class.java)
+            intent.putExtra(IntentTags.COLLECTION_ID_TO_EDITOR, collections[position].collectionId)
+            intent.putExtra(IntentTags.TITLE_COLLECTION_TO_EDITOR, collections[position].text)
+            activity.startActivity(intent)
         }
     }
 
@@ -245,7 +244,7 @@ class RecyclerViewAdapterCollections(val activity : CollectionsActivity): Recycl
     private fun updateDataInDataBase(currentItem : CollectionItem, color : Int, text : String) : Boolean
     {
         if (inputCheck(color, text)) {
-            val collectionItem = CollectionItem(currentItem.id, color, text)
+            val collectionItem = CollectionItem(currentItem.collectionId, color, text)
             mCollectionItemViewModel.updateCollectionItem(collectionItem)
             return true
         }

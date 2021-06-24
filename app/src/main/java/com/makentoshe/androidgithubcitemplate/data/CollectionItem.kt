@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "collectionitem_table")
 data class CollectionItem (
     @PrimaryKey(autoGenerate = true)
-    var id : Int,
-    var color : Int,
-    var text : String
+    val collectionId : Int,
+    val color : Int,
+    val text : String
 )

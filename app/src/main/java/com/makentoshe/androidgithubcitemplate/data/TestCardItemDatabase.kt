@@ -5,15 +5,16 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [CollectionItem::class], version = 1, exportSchema = false)
-abstract class CollectionItemDatabase : RoomDatabase() {
-    abstract fun collectionItemDao(): CollectionItemDao
+@Database(entities = [TestCardItem::class], version = 1, exportSchema = false)
+abstract class TestCardItemDatabase : RoomDatabase() {
+
+    abstract fun testCardItemDao(): TestCardItemDao
 
     companion object {
         @Volatile
-        private var INSTANCE: CollectionItemDatabase? = null
+        private var INSTANCE: TestCardItemDatabase? = null
 
-        fun getDatabase(context: Context): CollectionItemDatabase {
+        fun getDatabase(context: Context): TestCardItemDatabase {
             val tempInstance = INSTANCE
             if (tempInstance != null) {
                 return tempInstance
@@ -21,40 +22,14 @@ abstract class CollectionItemDatabase : RoomDatabase() {
             synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    CollectionItemDatabase::class.java,
-                    "collectionitem_database"
+                    TestCardItemDatabase::class.java,
+                    "testcarditem_database"
                 ).build()
                 INSTANCE = instance
                 return instance
             }
-
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

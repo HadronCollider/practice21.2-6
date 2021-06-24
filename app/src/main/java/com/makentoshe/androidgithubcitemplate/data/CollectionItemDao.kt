@@ -7,7 +7,7 @@ import androidx.room.*
 interface CollectionItemDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addCollectionItem(testCard : CollectionItem)
+    suspend fun addCollectionItem(collectionItem : CollectionItem)
 
     @Delete
     suspend fun deleteCollectionItem(collectionItem : CollectionItem)
@@ -15,6 +15,9 @@ interface CollectionItemDao {
     @Update
     suspend fun updateCollectionItem(collectionItem : CollectionItem)
 
-    @Query("SELECT * FROM collectionitem_table ORDER BY id ASC")
-    fun readAllData(): LiveData<List<CollectionItem>>
+    @Query("SELECT * FROM collectionitem_table WHERE collectionId = :id")
+    fun getById(id: Int): LiveData<CollectionItem>
+
+    @Query("SELECT * FROM collectionitem_table ORDER BY collectionId ASC")
+    fun getCollectionItems(): LiveData<List<CollectionItem>>
 }

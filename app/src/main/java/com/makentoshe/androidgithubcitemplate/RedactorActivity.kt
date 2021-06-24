@@ -12,8 +12,12 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.makentoshe.androidgithubcitemplate.data.CollectionItem
+import com.makentoshe.androidgithubcitemplate.data.CollectionItemViewModel
 
 class Tests(var Ques : String, var Ans : String)
 
@@ -21,10 +25,6 @@ class RedactorActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_redactor)
-        if (intent.hasExtra(IntentTags.TITLE_COLLECTION_TO_REDACTOR))
-            title = intent.getStringExtra(IntentTags.TITLE_COLLECTION_TO_REDACTOR) + " redactor"
-        else
-            title = "Collection redactor"
 
         val tests = (0 until 20).map { Tests("Определение #${it}", "Формулировка #${it}") } as MutableList
 
@@ -52,6 +52,16 @@ class RedactorActivity : AppCompatActivity() {
             val alertDialog: AlertDialog = mDialogBuilder.create()
             alertDialog.show()
         }
+
+        // Database
+        val collectionId : Int = intent.getIntExtra(IntentTags.COLLECTION_ID_TO_EDITOR, 0)
+
+        val mCollectionViewModel = ViewModelProvider(this).get(CollectionItemViewModel::class.java)
+        //mCollectionViewModel.getByIdCollectionItem(collectionId).observe(this,
+        //    Observer {  })
+
+        title = intent.getStringExtra(IntentTags.TITLE_COLLECTION_TO_EDITOR)
+
     }
 }
 
@@ -109,6 +119,7 @@ class RecyclerViewAdapterRedactor(val activity: RedactorActivity, val tests: Mut
     override fun getItemCount(): Int {
         return tests.size
     }
+
 }
 
 class ViewHolderTests(itemView: View): RecyclerView.ViewHolder(itemView)
