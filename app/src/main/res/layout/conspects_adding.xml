@@ -7,14 +7,31 @@
     android:orientation="vertical"
     android:padding="10dp">
 
+    <TextView
+        android:id="@+id/con_pro_text1_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name: "/>
 
     <EditText
-        android:id="@+id/editTextConspectsAdding"
+        android:id="@+id/con_pro_text1_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Name"/>
+
+    <TextView
+        android:id="@+id/con_pro_url_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="URL: "/>
+
+    <EditText
+        android:id="@+id/con_pro_url_inpit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="Name" />
+        android:hint="URL" />
 
     <Button
         android:id="@+id/buttonConspectsAddingColor"

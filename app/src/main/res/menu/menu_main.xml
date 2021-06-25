@@ -8,6 +8,11 @@
         android:title="Notification"
         app:showAsAction="never" />
     <item
+        android:id="@+id/htw_but"
+        android:orderInCategory="100"
+        android:title="How to use?"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/info_but"
         android:orderInCategory="100"
         android:title="About"
