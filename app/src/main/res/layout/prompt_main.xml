@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp" >
+
+    <TextView
+        android:id="@+id/main_pro_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Subject name:" />
+
+    <EditText
+        android:autofillHints=""
+        android:id="@+id/main_pro_text_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Name"
+        android:text="">
+    </EditText>
+     <Button
+        android:id="@+id/main_pro_color_but"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:text="Color" />
+</LinearLayout>

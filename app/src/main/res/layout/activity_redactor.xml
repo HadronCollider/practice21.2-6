@@ -12,7 +12,7 @@
         android:layout_weight="10">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/school_subjects"
+            android:id="@+id/redactor_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -26,11 +26,11 @@
         android:layout_weight="100">
 
         <Button
-            android:id="@+id/main_add_button"
+            android:id="@+id/redactor_add_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="Add subject"
+            android:text="Add Card"
             android:background="#0099CC"
             android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
