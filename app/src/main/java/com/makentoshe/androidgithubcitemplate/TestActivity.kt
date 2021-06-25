@@ -11,7 +11,7 @@ class TestActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test)
         title = "Test"
-
+/*
         val conspects = (0 until 4).map { Tests("Question ${it}", "Answer $it") } as MutableList
 
         var i = 0
@@ -47,7 +47,8 @@ class TestActivity : AppCompatActivity() {
                 Toast.makeText(this, "Right", Toast.LENGTH_SHORT).show()
             else
                 Toast.makeText(this, "False", Toast.LENGTH_SHORT).show()
-
         }
+
+ */
     }
 }
