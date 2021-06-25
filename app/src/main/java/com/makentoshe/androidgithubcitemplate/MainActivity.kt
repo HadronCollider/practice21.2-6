@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         createNotificationChannel()
 
-        val subs = (0 until 20).map { Subject("Sub #${it}") } as MutableList
+        val subs = (0 until 1).map { Subject("Физика") } as MutableList
 
         val school_sub = findViewById<RecyclerView>(R.id.school_subjects)
         school_sub.layoutManager = LinearLayoutManager(this)

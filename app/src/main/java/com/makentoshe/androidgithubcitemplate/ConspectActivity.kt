@@ -32,7 +32,7 @@ class ConspectActivity : AppCompatActivity() {
             title = "Conspects"
         }
 
-        val conspects = (0 until 10).map { Conspect("Conspect #${it}", "") } as MutableList
+        val conspects = (0 until 1).map { Conspect("Зачет по физике", "https://docs.google.com/document/d/1YQRIhs7epxpXpq1V2wCrgdoDWa3eGNpKahO8qL-446M/edit") } as MutableList
 
         val recycleView = findViewById<RecyclerView>(R.id.recycleviewConspects)
         recycleView.adapter = RecyclerViewAdapterConspects(this, conspects)
