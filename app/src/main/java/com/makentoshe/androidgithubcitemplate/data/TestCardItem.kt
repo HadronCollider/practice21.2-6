@@ -7,13 +7,12 @@ import androidx.room.PrimaryKey;
 data class TestCardItem (
     @PrimaryKey(autoGenerate = true)
     val testCardId : Int,
-    val collectionCreatorId : Int,
     val firstText : String,
-    val secondText : String,
-    val isInLearning : Boolean,
+    val secondText : String
+    /*val isInLearning : Boolean,
     val isRemembered : Boolean,
     val score : Float,
-    val globalScore : Int
+    val globalScore : Int*/
 )
 
 

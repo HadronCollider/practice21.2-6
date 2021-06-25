@@ -1,13 +1,10 @@
 package com.makentoshe.androidgithubcitemplate.data
 
-import androidx.room.Embedded
-import androidx.room.Relation
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-data class CollectionWithTestCardItem (
-    @Embedded val collectionItem: CollectionItem,
-    @Relation(
-        parentColumn = "collectionId",
-        entityColumn = "collectionCreatorId"
-    )
-    val testCardsItems: List<TestCardItem>
+@Entity(tableName = "collectionwithtestcarditem_table", primaryKeys = ["collectionId", "testCardId"])
+data class CollectionWithTestCardItem(
+    val collectionId: Int,
+    val testCardId: Int
 )

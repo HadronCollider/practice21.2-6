@@ -12,13 +12,12 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.flask.colorpicker.builder.ColorPickerClickListener
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import com.makentoshe.androidgithubcitemplate.data.CollectionItem
-import com.makentoshe.androidgithubcitemplate.data.CollectionItemViewModel
+import com.makentoshe.androidgithubcitemplate.data.CollectionItemDao
+import com.makentoshe.androidgithubcitemplate.data.TestsDatabase
 import android.view.LayoutInflater as LayoutInflater
 
 
@@ -66,7 +65,7 @@ fun inputCheck(color : Int, text : String) : Boolean {
 }
 
 class CollectionsActivity : AppCompatActivity() {
-    private lateinit var mCollectionItemViewModel: CollectionItemViewModel
+    private lateinit var collectionItemDao: CollectionItemDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,10 +90,11 @@ class CollectionsActivity : AppCompatActivity() {
         recycleView.adapter = adapter
 
         // Database
-        mCollectionItemViewModel = ViewModelProvider(this).get(CollectionItemViewModel::class.java)
-        mCollectionItemViewModel.readAllData.observe(this, Observer {
-                collections -> adapter.setData(collections)
-        })
+
+        collectionItemDao =
+            TestsDatabase.getDatabase(application).collectionItemDao()
+
+        adapter.setData()
 
         // Settings dialog
         val dialogSettings : AlertDialog = buildSettingsDialog(this, view,
@@ -105,7 +105,7 @@ class CollectionsActivity : AppCompatActivity() {
 
                 if (insertDataToDataBase(background.color, newText?.text.toString())) {
                     Toast.makeText(this, "Added!", Toast.LENGTH_LONG).show()
-                    recycleView.adapter?.notifyDataSetChanged()
+                    adapter.setData()
                 } else {
                     Toast.makeText(this, "Input is not correct!", Toast.LENGTH_LONG).show()
                     recycleView.adapter?.notifyDataSetChanged()
@@ -143,7 +143,7 @@ class CollectionsActivity : AppCompatActivity() {
     private fun insertDataToDataBase(color : Int, text : String) : Boolean {
         if (inputCheck(color, text)) {
             val collectionItem = CollectionItem(0, color, text)
-            mCollectionItemViewModel.addCollectionItem(collectionItem)
+            collectionItemDao.addCollectionItem(collectionItem)
             return true
         }
         return false
@@ -155,8 +155,9 @@ class CollectionsActivity : AppCompatActivity() {
 class RecyclerViewAdapterCollections(val activity : CollectionsActivity): RecyclerView.Adapter<ViewHolderCollections> ()
 {
     private var collections = emptyList<CollectionItem>()
-    private lateinit var mCollectionItemViewModel: CollectionItemViewModel
 
+    val collectionItemDao: CollectionItemDao =
+        TestsDatabase.getDatabase(activity).collectionItemDao()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderCollections {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.collections_item, parent, false)
@@ -176,7 +177,7 @@ class RecyclerViewAdapterCollections(val activity : CollectionsActivity): Recycl
         val textSettings = view.findViewById<EditText>(R.id.editTextCollectionsSettings)
 
         // Database
-        mCollectionItemViewModel = ViewModelProvider(activity).get(CollectionItemViewModel::class.java)
+        //mCollectionItemViewModel = ViewModelProvider(activity).get(CollectionItemViewModel::class.java)
 
         // Settings dialog
         val dialogSettings : AlertDialog = buildSettingsDialog(activity, view,
@@ -245,7 +246,8 @@ class RecyclerViewAdapterCollections(val activity : CollectionsActivity): Recycl
     {
         if (inputCheck(color, text)) {
             val collectionItem = CollectionItem(currentItem.collectionId, color, text)
-            mCollectionItemViewModel.updateCollectionItem(collectionItem)
+            collectionItemDao.updateCollectionItem(collectionItem)
+            setData()
             return true
         }
         return false
@@ -253,12 +255,13 @@ class RecyclerViewAdapterCollections(val activity : CollectionsActivity): Recycl
 
     private fun deleteDataFromDataBase(currentItem : CollectionItem)
     {
-        mCollectionItemViewModel.deleteCollectionItem(currentItem)
+        collectionItemDao.deleteCollectionItem(currentItem)
+        setData()
     }
 
-    fun setData(newCollections : List<CollectionItem>)
+    fun setData()
     {
-        collections = newCollections
+        collections = collectionItemDao.getCollectionItems()
         notifyDataSetChanged()
     }
 }

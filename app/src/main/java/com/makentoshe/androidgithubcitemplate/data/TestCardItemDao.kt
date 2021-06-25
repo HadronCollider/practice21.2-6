@@ -1,6 +1,5 @@
 package com.makentoshe.androidgithubcitemplate.data
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 
 
@@ -8,17 +7,17 @@ import androidx.room.*
 interface TestCardItemDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addTestCardItem(testCard : TestCardItem)
+    fun addTestCardItem(testCard : TestCardItem) : Long
 
     @Delete
-    suspend fun deleteTestCardItem(testCard : TestCardItem)
+    fun deleteTestCardItem(testCard : TestCardItem)
 
     @Update
-    suspend fun updateTestCardItem(testCard : TestCardItem)
+    fun updateTestCardItem(testCard : TestCardItem)
 
     @Query("SELECT * FROM testcarditem_table WHERE testCardId = :id")
-    fun getById(id: Int): TestCardItem?
+    fun getById(id: Int): TestCardItem
 
     @Query("SELECT * FROM testcarditem_table ORDER BY testCardId ASC")
-    fun getTestCardItems(): LiveData<List<TestCardItem>>
+    fun getTestCardItems(): List<TestCardItem>
 }

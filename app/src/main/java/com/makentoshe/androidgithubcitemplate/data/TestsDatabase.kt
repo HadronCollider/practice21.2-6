@@ -5,13 +5,15 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [CollectionItem::class, TestCardItem::class],
+@Database(entities = [CollectionItem::class, TestCardItem::class, CollectionWithTestCardItem::class],
     version = 1, exportSchema = false)
 abstract class TestsDatabase : RoomDatabase() {
 
     abstract fun collectionItemDao(): CollectionItemDao
 
     abstract fun testCardItemDao(): TestCardItemDao
+
+    abstract fun collectionWithTestCardItemDao(): CollectionWithTestCardItemDao
 
     companion object {
         @Volatile
@@ -27,7 +29,7 @@ abstract class TestsDatabase : RoomDatabase() {
                     context.applicationContext,
                     TestsDatabase::class.java,
                     "tests_database"
-                ).build()
+                ).allowMainThreadQueries().build()
                 INSTANCE = instance
                 return instance
             }
