@@ -142,7 +142,7 @@ class CollectionsActivity : AppCompatActivity() {
 
     private fun insertDataToDataBase(color : Int, text : String) : Boolean {
         if (inputCheck(color, text)) {
-            val collectionItem = CollectionItem(0, color, text)
+            val collectionItem = CollectionItem(0, color, text, false)
             collectionItemDao.addCollectionItem(collectionItem)
             return true
         }
@@ -168,6 +168,7 @@ class RecyclerViewAdapterCollections(val activity : CollectionsActivity): Recycl
         holder.textView.text = collections[position].text
         holder.cardView.setCardBackgroundColor(collections[position].color)
         holder.textView.setTextColor(Color.parseColor("#000000"))
+        holder.checkBox.isChecked = collections[position].isSelected
 
         // Layouts
         val layoutInflater : LayoutInflater = LayoutInflater.from(activity)
@@ -186,7 +187,7 @@ class RecyclerViewAdapterCollections(val activity : CollectionsActivity): Recycl
                 val newText = view.findViewById<EditText>(R.id.editTextCollectionsSettings)
                 val background = colorButton.background as ColorDrawable
 
-                if (updateDataInDataBase(collections[position], background.color, newText?.text.toString())) {
+                if (updateDataInDataBase(collections[position], background.color, newText?.text.toString(), collections[position].isSelected)) {
                     Toast.makeText(activity, "Changed!", Toast.LENGTH_LONG).show()
                     notifyDataSetChanged()
                 } else {
@@ -236,16 +237,21 @@ class RecyclerViewAdapterCollections(val activity : CollectionsActivity): Recycl
             intent.putExtra(IntentTags.TITLE_COLLECTION_TO_EDITOR, collections[position].text)
             activity.startActivity(intent)
         }
+
+        // Checkbox
+        holder.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
+            updateDataInDataBase(collections[position], collections[position].color, collections[position].text, isChecked)
+        }
     }
 
     override fun getItemCount(): Int {
         return collections.size
     }
 
-    private fun updateDataInDataBase(currentItem : CollectionItem, color : Int, text : String) : Boolean
+    private fun updateDataInDataBase(currentItem : CollectionItem, color : Int, text : String, isSelected : Boolean) : Boolean
     {
         if (inputCheck(color, text)) {
-            val collectionItem = CollectionItem(currentItem.collectionId, color, text)
+            val collectionItem = CollectionItem(currentItem.collectionId, color, text, isSelected)
             collectionItemDao.updateCollectionItem(collectionItem)
             setData()
             return true

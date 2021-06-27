@@ -8,5 +8,6 @@ data class CollectionItem (
     @PrimaryKey(autoGenerate = true)
     val collectionId : Int,
     val color : Int,
-    val text : String
+    val text : String,
+    val isSelected : Boolean
 )

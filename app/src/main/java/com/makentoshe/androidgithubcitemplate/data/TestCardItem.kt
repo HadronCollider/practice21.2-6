@@ -6,13 +6,11 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "testcarditem_table")
 data class TestCardItem (
     @PrimaryKey(autoGenerate = true)
-    val testCardId : Int,
-    val firstText : String,
-    val secondText : String
-    /*val isInLearning : Boolean,
-    val isRemembered : Boolean,
-    val score : Float,
-    val globalScore : Int*/
+    var testCardId : Int,
+    var firstText : String,
+    var secondText : String,
+    var score : Float,
+    var globalScore : Int
 )
 
 

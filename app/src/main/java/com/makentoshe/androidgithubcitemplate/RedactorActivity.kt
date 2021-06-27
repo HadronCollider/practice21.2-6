@@ -50,7 +50,7 @@ class RedactorActivity : AppCompatActivity() {
             mDialogBuilder
                 .setCancelable(false)
                 .setPositiveButton("Save") { dialog, id ->
-                    val testCardItem = TestCardItem(0, text1_input?.text.toString(), text2_input?.text.toString())
+                    val testCardItem = TestCardItem(0, text1_input?.text.toString(), text2_input?.text.toString(), 0f, 0)
                     if (adapter.insertDataToDataBase(testCardItem)) {
                         Toast.makeText(this, "Added!", Toast.LENGTH_LONG).show()
                         adapter.setData()
@@ -98,7 +98,7 @@ class RecyclerViewAdapterRedactor(val activity: RedactorActivity, val collection
             mDialogBuilder
                 .setCancelable(false)
                 .setPositiveButton("Apply") { dialog, id ->
-                    val testCard = TestCardItem(tests[position].testCardId, text1_input.text.toString(), text2_input.text.toString())
+                    val testCard = TestCardItem(tests[position].testCardId, text1_input.text.toString(), text2_input.text.toString(), 0f, 0)
                     if (updateDataInDataBase(testCard)) {
                         Toast.makeText(activity, "Changed!", Toast.LENGTH_LONG).show()
                         setData()
